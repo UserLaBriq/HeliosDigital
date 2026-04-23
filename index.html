@@ -1,711 +1,569 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Helios Digital | SEO & GEO Excellence</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    
-    <link rel="icon" type="image/x-icon" href="ico/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="32x32" href="ico/favicon-32x32.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="./assets/ico/favicon.ico" />
+<title>Julien Anstett — Helios Digital</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;700;800&display=swap');
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
-                    },
-                    colors: {
-                        primary: '#0f172a',
-                        accent: '#3b82f6',
-                        gold: '#fbbf24',
-                        surface: '#f8fafc',
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'float-delayed': 'float 6s ease-in-out 3s infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <style>
-        body {
-            overflow-x: hidden;
-        }
-        
-        .spotlight {
-            background: radial-gradient(600px circle at var(--x) var(--y), rgba(59, 130, 246, 0.15), transparent 40%);
-        }
-        
-        .text-gradient {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .magnetic-btn {
-            transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .precision-line {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .precision-line::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-        
-        .precision-line:hover::after {
-            transform: translateX(100%);
-        }
-        
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        .stat-counter {
-            font-variant-numeric: tabular-nums;
-        }
-    </style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --green: #00ff9d;
+  --dim: #00804e;
+  --bg: #050a07;
+  --white: #f5f4f0;
+  --pad: clamp(1.5rem, 4vw, 3rem);
+}
+
+html, body { width: 100%; height: 100%; background: var(--bg); }
+
+/* ── BOOT OVERLAY ── */
+#boot-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: var(--bg);
+}
+
+/* ── BG IMAGE ── */
+#bg {
+  position: fixed; inset: -3%; z-index: 0;
+  background: url('./assets/images/2xgrass.png') center/cover no-repeat;
+  opacity: 0; transition: opacity 2s ease;
+}
+#bg.visible { opacity: 1; }
+#bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,.65) 0%, rgba(0,0,0,.28) 60%, rgba(0,0,0,.45) 100%);
+}
+
+/* ── TERMINAL ── */
+#terminal {
+  position: absolute; inset: 0; z-index: 101;
+  display: flex; align-items: flex-start; justify-content: flex-start;
+  padding: clamp(2rem, 6vw, 5rem);
+}
+#terminal.hidden { display: none; }
+#output {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(11px, 1.3vw, 14px);
+  line-height: 1.8; color: var(--green);
+  text-shadow: 0 0 8px rgba(0,255,157,.5);
+  white-space: pre; max-width: 640px;
+}
+#term-cursor {
+  display: inline-block; width: 9px; height: 1.1em;
+  background: var(--green); vertical-align: text-bottom;
+  animation: blink .7s step-end infinite;
+  box-shadow: 0 0 6px var(--green);
+}
+@keyframes blink { 50% { opacity: 0; } }
+.dim { color: var(--dim); text-shadow: none; }
+@keyframes flicker-out {
+  0%{opacity:1}12%{opacity:0}18%{opacity:1}32%{opacity:0}38%{opacity:1}
+  52%{opacity:0}58%{opacity:1}72%{opacity:0}80%{opacity:1}94%{opacity:0}100%{opacity:0}
+}
+#terminal.flicker { animation: flicker-out 1.2s ease forwards; }
+
+/* ── LOGO OVERLAY ── */
+#logo-overlay {
+  position: absolute; inset: 0; z-index: 102;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  pointer-events: none; opacity: 0;
+  transition: opacity 1.2s ease 0.3s;
+}
+#logo-overlay.visible { opacity: 1; }
+#logo-overlay.fadeout { opacity: 0; transition: opacity 1.4s ease; }
+#logo-text {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(2.2rem, 6vw, 5.5rem);
+  letter-spacing: .32em; color: #fff;
+  text-shadow: 0 0 50px rgba(0,255,157,.55), 0 2px 80px rgba(0,0,0,.9);
+  text-transform: uppercase;
+}
+#logo-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(.65rem, 1.2vw, .95rem);
+  letter-spacing: .6em; color: var(--green);
+  text-shadow: 0 0 14px rgba(0,255,157,.5);
+  margin-top: .9rem; text-transform: uppercase;
+}
+
+/* ── CURSOR ── */
+* { cursor: none !important; }
+#cursor-dot {
+  position: fixed; z-index: 9999; pointer-events: none;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--white); transform: translate(-50%,-50%);
+  mix-blend-mode: difference; opacity: 0; transition: opacity .4s ease;
+}
+#cursor-ring {
+  position: fixed; z-index: 9998; pointer-events: none;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.3);
+  transform: translate(-50%,-50%);
+  opacity: 0; transition: opacity .4s ease;
+}
+#cursor-dot.active, #cursor-ring.active { opacity: 1; }
+
+/* ── BINARY CANVAS ── */
+#binary-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: clamp(1.2rem, 3vw, 2rem) var(--pad);
+  opacity: 0; transition: opacity .8s ease;
+}
+nav.visible { opacity: 1; }
+.nav-name {
+  font-family: 'Syne', sans-serif; font-size: clamp(.75rem,1.1vw,.95rem);
+  font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--white); text-decoration: none; opacity: .9;
+}
+.nav-right { display: flex; align-items: center; gap: 2rem; }
+.nav-link {
+  font-family: 'Syne', sans-serif; font-size: clamp(.7rem,1vw,.88rem);
+  font-weight: 400; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--white); text-decoration: none;
+  opacity: .7; transition: opacity .25s ease; position: relative;
+}
+.nav-link::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 1px; background: var(--white);
+  transform: scaleX(0); transform-origin: left; transition: transform .3s ease;
+}
+.nav-link:hover { opacity: 1; }
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* ── BOTTOM BAR ── */
+#bottom-bar {
+  position: fixed; bottom: clamp(1.2rem,3vw,2.2rem);
+  left: var(--pad); right: var(--pad);
+  display: flex; align-items: flex-end; justify-content: space-between;
+  z-index: 50; opacity: 0; transition: opacity .8s ease; pointer-events: none;
+}
+#bottom-bar.visible { opacity: 1; }
+.bottom-name {
+  font-family: 'Syne', sans-serif; font-size: clamp(.65rem,.95vw,.82rem);
+  font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--white); opacity: .75;
+}
+.scroll-hint {
+  font-family: 'Syne', sans-serif; font-size: clamp(.6rem,.85vw,.72rem);
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--white); opacity: .4;
+  display: flex; align-items: center; gap: .6rem;
+  animation: bob 2.4s ease-in-out infinite;
+}
+@keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
+.scroll-line { width: 28px; height: 1px; background: var(--white); opacity: .4; }
+
+/* ── SCROLL WRAP ── */
+#scroll-wrap {
+  position: relative; z-index: 2;
+  height: 100vh; overflow-y: auto; overflow-x: hidden;
+  scroll-snap-type: y mandatory; scroll-behavior: smooth;
+  visibility: hidden;
+}
+#scroll-wrap.visible { visibility: visible; }
+
+/* ── HERO SECTION ── */
+#section-hero {
+  height: 100vh; scroll-snap-align: start;
+  display: flex; flex-direction: column;
+  justify-content: flex-end; align-items: flex-end;
+  padding: 0 var(--pad); padding-bottom: clamp(5rem,10vh,7rem);
+}
+.hero-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(.78rem,1.05vw,1rem);
+  line-height: 1.78; color: var(--white);
+  max-width: 340px; font-weight: 400;
+  text-align: justify; text-justify: inter-word;
+}
+.hero-line { display: block; overflow: hidden; line-height: 1.78; }
+.hero-line-inner {
+  display: block;
+  transform: translateY(110%); opacity: 0;
+  transition: transform .7s cubic-bezier(.16,1,.3,1), opacity .5s ease;
+}
+.hero-line-inner.in { transform: translateY(0); opacity: 1; }
+.hero-text em { font-style: italic; opacity: .82; }
+.hero-text strong {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-style: normal; font-size: .8em; letter-spacing: .1em;
+}
+
+/* ── WORKS SECTION ── */
+#section-works {
+  min-height: 100vh; scroll-snap-align: start;
+  padding: clamp(5rem,10vh,8rem) var(--pad) clamp(4rem,8vh,6rem);
+}
+.works-header {
+  font-family: 'Syne', sans-serif; font-size: clamp(.62rem,.88vw,.76rem);
+  font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--green); opacity: .65; margin-bottom: clamp(2.5rem,5vh,4rem);
+}
+.works-grid {
+  display: grid; grid-template-columns: repeat(2,1fr);
+  gap: 1px; background: rgba(255,255,255,.07);
+}
+@media (max-width: 680px) { .works-grid { grid-template-columns: 1fr; } }
+
+/* project card */
+.project-card {
+  background: rgba(4,9,6,.88);
+  position: relative; overflow: hidden;
+  aspect-ratio: 16/10;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 1.5rem; text-decoration: none;
+  transition: background .35s ease;
+}
+.project-card:hover { background: rgba(8,18,10,.7); }
+
+.card-visual {
+  position: absolute; inset: 0; opacity: .16;
+  transition: opacity .4s ease;
+}
+.project-card:hover .card-visual { opacity: .3; }
+
+.visual-cibo {
+  background:
+    radial-gradient(circle at 30% 65%, rgba(0,255,157,.55) 0%, transparent 52%),
+    radial-gradient(circle at 78% 28%, rgba(0,200,110,.28) 0%, transparent 42%);
+}
+.visual-qr {
+  background:
+    linear-gradient(140deg, rgba(210,190,150,.4) 0%, transparent 55%),
+    repeating-linear-gradient(90deg, transparent, transparent 38px, rgba(210,190,150,.05) 38px, rgba(210,190,150,.05) 39px);
+}
+.visual-auto {
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(0,255,157,.12) 0%, transparent 68%),
+    repeating-linear-gradient(0deg, transparent, transparent 16px, rgba(0,255,157,.06) 16px, rgba(0,255,157,.06) 17px),
+    repeating-linear-gradient(90deg, transparent, transparent 16px, rgba(0,255,157,.06) 16px, rgba(0,255,157,.06) 17px);
+}
+.visual-fpv {
+  background:
+    radial-gradient(circle at 62% 38%, rgba(255,130,0,.32) 0%, transparent 52%),
+    radial-gradient(circle at 22% 72%, rgba(255,70,0,.18) 0%, transparent 38%);
+}
+
+.card-arrow {
+  position: absolute; top: 1.3rem; right: 1.3rem;
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--white); font-size: .65rem;
+  opacity: 0; transition: opacity .3s ease, transform .3s ease;
+  transform: translateY(4px);
+}
+.project-card:hover .card-arrow { opacity: .55; transform: translateY(0); }
+
+.wip-badge {
+  position: absolute; top: 1.1rem; left: 1.1rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .48rem; letter-spacing: .15em; text-transform: uppercase;
+  padding: .18rem .5rem;
+  background: rgba(0,255,157,.08);
+  border: 1px solid rgba(0,255,157,.22);
+  color: var(--green);
+}
+
+.card-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(.52rem,.72vw,.62rem);
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--green); opacity: .65; margin-bottom: .45rem;
+}
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.1rem,2vw,1.55rem);
+  color: var(--white); font-weight: 400; line-height: 1.2;
+  margin-bottom: .35rem;
+}
+.card-desc {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(.6rem,.82vw,.72rem);
+  color: var(--white); opacity: .45;
+  line-height: 1.5; max-width: 300px;
+}
+.card-stack { display: flex; gap: .35rem; flex-wrap: wrap; margin-top: .65rem; }
+.chip {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(.48rem,.62vw,.56rem);
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: .16rem .45rem;
+  border: 1px solid rgba(0,255,157,.22);
+  color: var(--green); opacity: .6;
+}
+
+/* ── FOOTER ── */
+#section-footer {
+  padding: clamp(3.5rem,7vh,6rem) var(--pad) clamp(2.5rem,5vh,4rem);
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.footer-cta {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.5rem,3.2vw,2.4rem);
+  color: var(--white); text-align: center; font-weight: 400; line-height: 1.3;
+}
+.footer-email {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(.7rem,1vw,.88rem);
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--green); text-decoration: none; opacity: .8;
+  transition: opacity .25s;
+}
+.footer-email:hover { opacity: 1; }
+.footer-copy {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .58rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--white); opacity: .22; margin-top: 1.5rem;
+}
+</style>
 </head>
-<body class="bg-primary text-slate-300 antialiased selection:bg-accent selection:text-white">
+<body>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-gradient-to-br from-accent to-purple-600 rounded-lg flex items-center justify-center">
-                        <i data-lucide="target" class="w-5 h-5 text-white"></i>
-                    </div>
-                    <span class="text-white font-serif text-xl font-semibold tracking-tight">Helios Digital</span>
-                </div>
-                
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="#services" class="text-sm font-medium hover:text-white transition-colors precision-line pb-1">Services</a>
-                    <a href="#about" class="text-sm font-medium hover:text-white transition-colors precision-line pb-1">About</a>
-                    <a href="#results" class="text-sm font-medium hover:text-white transition-colors precision-line pb-1">Results</a>
-                    <a href="#contact" class="magnetic-btn px-6 py-2.5 bg-white text-primary rounded-full text-sm font-semibold hover:bg-accent hover:text-white transition-all duration-300">
-                        Get in Touch
-                    </a>
-                </div>
-                
-                <button class="md:hidden text-white" onclick="toggleMobileMenu()">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden glass absolute w-full border-t border-white/10">
-            <div class="px-6 py-4 space-y-4">
-                <a href="#services" class="block text-sm font-medium hover:text-white">Services</a>
-                <a href="#about" class="block text-sm font-medium hover:text-white">About</a>
-                <a href="#results" class="block text-sm font-medium hover:text-white">Results</a>
-                <a href="#contact" class="block text-sm font-medium text-accent">Get in Touch</a>
-            </div>
-        </div>
-    </nav>
+<div id="bg"></div>
+<canvas id="binary-canvas"></canvas>
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
 
-    <!-- Hero Section with Mouse Interaction -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-primary" id="hero">
-        <!-- Animated Background Grid -->
-        <div class="absolute inset-0 opacity-20">
-            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0); background-size: 40px 40px;"></div>
-        </div>
-        
-        <!-- Mouse Spotlight Effect -->
-        <div id="spotlight" class="absolute inset-0 spotlight pointer-events-none"></div>
-        
-        <!-- Floating Elements -->
-        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-accent/20 rounded-full blur-3xl animate-float"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-float-delayed"></div>
-        
-        <!-- SEO/GEO Floating Icons -->
-        <div class="absolute top-32 right-20 glass p-4 rounded-2xl animate-float opacity-60 hidden lg:block">
-            <i data-lucide="globe" class="w-8 h-8 text-accent"></i>
-        </div>
-        <div class="absolute bottom-40 left-20 glass p-4 rounded-2xl animate-float-delayed opacity-60 hidden lg:block">
-            <i data-lucide="map-pin" class="w-8 h-8 text-gold"></i>
-        </div>
-        <div class="absolute top-1/2 right-1/3 glass p-3 rounded-xl animate-float opacity-40 hidden lg:block">
-            <i data-lucide="search" class="w-6 h-6 text-white"></i>
-        </div>
+<!-- Boot -->
+<div id="boot-overlay">
+  <div id="terminal">
+    <div id="output"></div><span id="term-cursor"></span>
+  </div>
+  <div id="logo-overlay">
+    <div id="logo-text">Helios</div>
+    <div id="logo-sub">Digital&nbsp;&nbsp;//&nbsp;&nbsp;System Ready</div>
+  </div>
+</div>
 
-        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 reveal">
-                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                <span class="text-xs font-medium tracking-wider uppercase text-slate-400">Available for Projects</span>
-            </div>
-            
-            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-white leading-tight mb-6 reveal" style="transition-delay: 0.1s">
-                We Engineer <br>
-                <span class="text-gradient italic">Digital Dominance</span>
-            </h1>
-            
-            <p class="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-12 leading-relaxed reveal" style="transition-delay: 0.2s">
-                Precision SEO & Local GEO strategies that transform your business visibility. 
-                Data-driven. Meticulously crafted. Uncompromisingly effective.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal" style="transition-delay: 0.3s">
-                <a href="#contact" class="magnetic-btn group px-8 py-4 bg-accent text-white rounded-full font-semibold flex items-center gap-2 hover:bg-blue-600 transition-all duration-300 hover:shadow-lg hover:shadow-accent/25">
-                    Start Your Ascent
-                    <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="#services" class="magnetic-btn px-8 py-4 glass text-white rounded-full font-semibold hover:bg-white/10 transition-all duration-300">
-                    Explore Services
-                </a>
-            </div>
+<!-- Fixed UI -->
+<nav id="main-nav">
+  <a class="nav-name" href="#">Helios Digital</a>
+  <div class="nav-right">
+    <a class="nav-link" href="#section-works">Work</a>
+    <a class="nav-link" href="mailto:anstettjulien@gmail.com">Contact</a>
+  </div>
+</nav>
+<div id="bottom-bar">
+  <span class="bottom-name">Julien Anstett</span>
+  <span class="scroll-hint"><span class="scroll-line"></span> Scroll</span>
+</div>
 
-            <!-- Stats Preview -->
-            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto reveal" style="transition-delay: 0.4s">
-                <div class="text-center">
-                    <div class="text-3xl md:text-4xl font-bold text-white mb-1">97%</div>
-                    <div class="text-xs uppercase tracking-wider text-slate-500">Success Rate</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl md:text-4xl font-bold text-white mb-1">150+</div>
-                    <div class="text-xs uppercase tracking-wider text-slate-500">Clients</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl md:text-4xl font-bold text-white mb-1">3.5x</div>
-                    <div class="text-xs uppercase tracking-wider text-slate-500">Avg. ROI</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl md:text-4xl font-bold text-white mb-1">24/7</div>
-                    <div class="text-xs uppercase tracking-wider text-slate-500">Monitoring</div>
-                </div>
-            </div>
+<!-- Scrollable -->
+<div id="scroll-wrap">
+
+  <section id="section-hero">
+    <p class="hero-text">
+      <span class="hero-line"><span class="hero-line-inner">Hey there,</span></span>
+      <span class="hero-line"><span class="hero-line-inner">&nbsp;</span></span>
+      <span class="hero-line"><span class="hero-line-inner">I am a <em>freelance engineer & developer</em></span></span>
+      <span class="hero-line"><span class="hero-line-inner">based between <strong>FRANCE & SWITZERLAND</strong>.</span></span>
+      <span class="hero-line"><span class="hero-line-inner">I <strong>COLLABORATE WITH AGENCIES,</strong></span></span>
+      <span class="hero-line"><span class="hero-line-inner"><strong>STARTUPS & FOUNDERS</strong> to build</span></span>
+      <span class="hero-line"><span class="hero-line-inner">modern and reliable products, with</span></span>
+      <span class="hero-line"><span class="hero-line-inner">a special attention to <strong>AI, WEB & MOBILE</strong></span></span>
+      <span class="hero-line"><span class="hero-line-inner">— and to things that actually <em>work</em>.</span></span>
+    </p>
+  </section>
+
+  <section id="section-works">
+    <p class="works-header">// Selected work</p>
+    <div class="works-grid">
+
+      <a class="project-card" href="https://apps.apple.com/it/app/ciboai/id6757018806" target="_blank">
+        <div class="card-visual visual-cibo"></div>
+        <div class="card-arrow">↗</div>
+        <span class="card-tag">iOS App · 2025</span>
+        <h2 class="card-title">CiboAI</h2>
+        <p class="card-desc">AI-powered recipe finder. Built solo and shipped to the App Store in ~10 days.</p>
+        <div class="card-stack">
+          <span class="chip">Expo</span><span class="chip">SwiftUI</span>
+          <span class="chip">GPT-4o</span><span class="chip">App Store</span>
         </div>
+      </a>
 
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-            <i data-lucide="chevron-down" class="w-6 h-6 text-slate-600"></i>
+      <a class="project-card" href="https://userlabriq.github.io/QR/" target="_blank">
+        <div class="card-visual visual-qr"></div>
+        <div class="card-arrow">↗</div>
+        <span class="card-tag">Web · Live</span>
+        <h2 class="card-title">QR Avocat</h2>
+        <p class="card-desc">Website for Paris Bar attorney Quentin Rapaud — glassmorphism, custom animations, legal pages.</p>
+        <div class="card-stack">
+          <span class="chip">HTML</span><span class="chip">Tailwind</span>
+          <span class="chip">JS</span><span class="chip">OVH</span>
         </div>
-    </section>
+      </a>
 
-    <!-- Services Section -->
-    <section id="services" class="py-32 bg-slate-50 relative">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-20 reveal">
-                <span class="text-accent font-semibold text-sm tracking-wider uppercase mb-4 block">Our Expertise</span>
-                <h2 class="font-serif text-4xl md:text-5xl text-primary mb-6">Precision Engineered Solutions</h2>
-                <p class="max-w-2xl mx-auto text-slate-600 text-lg">
-                    Every pixel, every keyword, every local citation—meticulously optimized for maximum impact.
-                </p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- SEO Service -->
-                <div class="group relative bg-white rounded-3xl p-8 md:p-12 shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 reveal">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-bl-full transition-all duration-500 group-hover:bg-accent/10"></div>
-                    
-                    <div class="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-                        <i data-lucide="trending-up" class="w-8 h-8 text-accent"></i>
-                    </div>
-                    
-                    <h3 class="font-serif text-3xl text-primary mb-4">Global SEO Mastery</h3>
-                    <p class="text-slate-600 mb-8 leading-relaxed">
-                        Technical precision meets creative strategy. We architect website infrastructures that search engines reward, driving sustainable organic growth.
-                    </p>
-                    
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center gap-3 text-slate-700">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>
-                            Technical SEO Audits & Remediation
-                        </li>
-                        <li class="flex items-center gap-3 text-slate-700">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>
-                            Content Strategy & Optimization
-                        </li>
-                        <li class="flex items-center gap-3 text-slate-700">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>
-                            Authority Building & Backlink Acquisition
-                        </li>
-                    </ul>
-                    
-                    <div class="flex items-center gap-2 text-accent font-semibold group-hover:gap-4 transition-all cursor-pointer">
-                        Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </div>
-                </div>
-
-                <!-- GEO Service -->
-                <div class="group relative bg-white rounded-3xl p-8 md:p-12 shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 reveal" style="transition-delay: 0.1s">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-bl-full transition-all duration-500 group-hover:bg-gold/10"></div>
-                    
-                    <div class="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-                        <i data-lucide="map" class="w-8 h-8 text-gold"></i>
-                    </div>
-                    
-                    <h3 class="font-serif text-3xl text-primary mb-4">Local GEO Dominance</h3>
-                    <p class="text-slate-600 mb-8 leading-relaxed">
-                        Own your neighborhood, city, and region. Hyper-local optimization strategies that put your business on the map—literally.
-                    </p>
-                    
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center gap-3 text-slate-700">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-gold"></i>
-                            Google Business Profile Optimization
-                        </li>
-                        <li class="flex items-center gap-3 text-slate-700">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-gold"></i>
-                            Local Citation Building
-                        </li>
-                        <li class="flex items-center gap-3 text-slate-700">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-gold"></i>
-                            Geo-Targeted Content Strategy
-                        </li>
-                    </ul>
-                    
-                    <div class="flex items-center gap-2 text-gold font-semibold group-hover:gap-4 transition-all cursor-pointer">
-                        Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </div>
-                </div>
-            </div>
+      <a class="project-card" href="#" style="pointer-events:none;">
+        <div class="card-visual visual-auto"></div>
+        <div class="wip-badge">Portfolio</div>
+        <span class="card-tag">Computer Vision · 2024</span>
+        <h2 class="card-title">AutoReckon</h2>
+        <p class="card-desc">3-stage CV pipeline — vehicle detection, license plate OCR & model classification. 2.2ms inference.</p>
+        <div class="card-stack">
+          <span class="chip">PyTorch</span><span class="chip">YOLOv5</span>
+          <span class="chip">ResNet50</span><span class="chip">VGG16</span>
         </div>
-    </section>
+      </a>
 
-    <!-- About Section -->
-    <section id="about" class="py-32 bg-primary relative overflow-hidden">
-        <div class="absolute inset-0 opacity-30">
-            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-accent/10 to-purple-600/10"></div>
+      <a class="project-card" href="#" style="pointer-events:none;">
+        <div class="card-visual visual-fpv"></div>
+        <div class="wip-badge">Build log</div>
+        <span class="card-tag">Hardware · Fabrication</span>
+        <h2 class="card-title">FPV Long Range</h2>
+        <p class="card-desc">Full drone build from scratch — CAD frame, 3D-printed parts, electronics wiring & Betaflight tuning.</p>
+        <div class="card-stack">
+          <span class="chip">3D Print</span><span class="chip">Betaflight</span>
+          <span class="chip">ExpressLRS</span><span class="chip">CAD</span>
         </div>
-        
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="reveal">
-                    <span class="text-accent font-semibold text-sm tracking-wider uppercase mb-4 block">About Us</span>
-                    <h2 class="font-serif text-4xl md:text-5xl text-white mb-6 leading-tight">
-                        Where Precision Meets <span class="italic text-accent">Performance</span>
-                    </h2>
-                    <p class="text-slate-400 text-lg mb-6 leading-relaxed">
-                        We are not marketers. We are digital architects. Founded on the belief that every business deserves to be found, we combine rigorous data analysis with creative excellence.
-                    </p>
-                    <p class="text-slate-400 text-lg mb-8 leading-relaxed">
-                        Our methodology is simple: Understand deeply. Execute precisely. Measure relentlessly. We treat your digital presence as if it were our own—because your success is our reputation.
-                    </p>
-                    
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="border-l-2 border-accent pl-6">
-                            <div class="text-3xl font-bold text-white mb-1">8+</div>
-                            <div class="text-sm text-slate-500">Years Experience</div>
-                        </div>
-                        <div class="border-l-2 border-gold pl-6">
-                            <div class="text-3xl font-bold text-white mb-1">50M+</div>
-                            <div class="text-sm text-slate-500">Organic Traffic Generated</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="relative reveal" style="transition-delay: 0.2s">
-                    <div class="relative rounded-3xl overflow-hidden aspect-[4/5]">
-                        <img src="me.png" alt="Team working" class="object-cover w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-transparent"></div>
-                        
-                        <div class="absolute bottom-8 left-8 right-8">
-                            <div class="glass p-6 rounded-2xl">
-                                <div class="flex items-center gap-4 mb-4">
-                                    <div class="flex -space-x-2">
-                                        <img src="http://static.photos/people/100x100/1" class="w-10 h-10 rounded-full border-2 border-primary" alt="Team member">
-                                        <img src="http://static.photos/people/100x100/2" class="w-10 h-10 rounded-full border-2 border-primary" alt="Team member">
-                                        <img src="http://static.photos/people/100x100/3" class="w-10 h-10 rounded-full border-2 border-primary" alt="Team member">
-                                    </div>
-                                    <div class="text-sm text-slate-300">
-                                        <div class="font-semibold text-white">Expert Team</div>
-                                        <div>Senior Strategists</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2 text-accent text-sm">
-                                    <i data-lucide="award" class="w-4 h-4"></i>
-                                    <span>Google Certified Partners</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Decorative Elements -->
-                    <div class="absolute -top-4 -right-4 w-24 h-24 border border-accent/30 rounded-full"></div>
-                    <div class="absolute -bottom-4 -left-4 w-32 h-32 border border-gold/30 rounded-full"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+      </a>
 
-    <!-- Results/Trust Section -->
-    <section id="results" class="py-24 bg-slate-50">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16 reveal">
-                <h2 class="font-serif text-4xl text-primary mb-4">Trusted by Industry Leaders</h2>
-                <p class="text-slate-600">Measurable results that speak louder than promises</p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8 mb-16">
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal">
-                    <div class="flex items-center gap-1 mb-4">
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                    </div>
-                    <p class="text-slate-600 mb-6 italic">"Helios Digital transformed our online presence. Our organic traffic increased 340% in just 6 months."</p>
-                    <div class="flex items-center gap-3">
-                        <img src="http://static.photos/people/100x100/11" class="w-12 h-12 rounded-full object-cover" alt="Client">
-                        <div>
-                            <div class="font-semibold text-primary">Sarah Chen</div>
-                            <div class="text-sm text-slate-500">CEO, TechVentures Inc.</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal" style="transition-delay: 0.1s">
-                    <div class="flex items-center gap-1 mb-4">
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                    </div>
-                    <p class="text-slate-600 mb-6 italic">"The local SEO strategy they implemented put us on the first page for every major keyword in our city."</p>
-                    <div class="flex items-center gap-3">
-                        <img src="http://static.photos/people/100x100/12" class="w-12 h-12 rounded-full object-cover" alt="Client">
-                        <div>
-                            <div class="font-semibold text-primary">Marcus Rodriguez</div>
-                            <div class="text-sm text-slate-500">Owner, Metro Legal Group</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 reveal" style="transition-delay: 0.2s">
-                    <div class="flex items-center gap-1 mb-4">
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                        <i data-lucide="star" class="w-5 h-5 text-gold fill-current"></i>
-                    </div>
-                    <p class="text-slate-600 mb-6 italic">"Meticulous attention to detail. They found technical issues we didn't know existed and fixed them rapidly."</p>
-                    <div class="flex items-center gap-3">
-                        <img src="http://static.photos/people/100x100/13" class="w-12 h-12 rounded-full object-cover" alt="Client">
-                        <div>
-                            <div class="font-semibold text-primary">Emily Watson</div>
-                            <div class="text-sm text-slate-500">CMO, Artisan Retail Co.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Logo Cloud -->
-            <div class="reveal">
-                <p class="text-center text-sm text-slate-400 mb-8 uppercase tracking-wider">Trusted by innovative companies</p>
-                <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
-                    <div class="flex items-center gap-2 text-slate-600 font-bold text-xl">
-                        <i data-lucide="hexagon" class="w-8 h-8"></i> TECHCORP
-                    </div>
-                    <div class="flex items-center gap-2 text-slate-600 font-bold text-xl">
-                        <i data-lucide="triangle" class="w-8 h-8"></i> VERTEX
-                    </div>
-                    <div class="flex items-center gap-2 text-slate-600 font-bold text-xl">
-                        <i data-lucide="circle" class="w-8 h-8"></i> ORBITAL
-                    </div>
-                    <div class="flex items-center gap-2 text-slate-600 font-bold text-xl">
-                        <i data-lucide="square" class="w-8 h-8"></i> CUBIC
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-32 bg-primary relative">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-16">
-                <div class="reveal">
-                    <span class="text-accent font-semibold text-sm tracking-wider uppercase mb-4 block">Get in Touch</span>
-                    <h2 class="font-serif text-4xl md:text-5xl text-white mb-6">Let's Engineer Your Success</h2>
-                    <p class="text-slate-400 text-lg mb-12 leading-relaxed">
-                        Ready to dominate search results? Tell us about your project. We'll respond within 24 hours with a precision-crafted strategy.
-                    </p>
-                    
-                    <div class="space-y-6">
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i data-lucide="mail" class="w-5 h-5 text-accent"></i>
-                            </div>
-                            <div>
-                                <div class="text-white font-semibold mb-1">Email Us</div>
-                                <div class="text-slate-400">anstettjulien@gmail.com</div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i data-lucide="phone" class="w-5 h-5 text-accent"></i>
-                            </div>
-                            <div>
-                                <div class="text-white font-semibold mb-1">Call Us</div>
-                                <div class="text-slate-400">+33 7 67 17 65 43</div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i data-lucide="map-pin" class="w-5 h-5 text-accent"></i>
-                            </div>
-                            <div>
-                                <div class="text-white font-semibold mb-1">Visit Us</div>
-                                <div class="text-slate-400">SOON</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="reveal" style="transition-delay: 0.2s">
-                    <form id="contact-form" class="glass p-8 md:p-10 rounded-3xl space-y-6">
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-300 mb-2">First Name</label>
-                                <input type="text" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:border-accent transition-colors" placeholder="John">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-300 mb-2">Last Name</label>
-                                <input type="text" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:border-accent transition-colors" placeholder="Doe">
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
-                            <input type="email" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:border-accent transition-colors" placeholder="john@company.com">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-2">Company</label>
-                            <input type="text" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:border-accent transition-colors" placeholder="Your Company">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-2">Service Interest</label>
-                            <select class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:border-accent transition-colors">
-                                <option value="" class="bg-primary">Select a service...</option>
-                                <option value="seo" class="bg-primary">Global SEO Mastery</option>
-                                <option value="geo" class="bg-primary">Local GEO Dominance</option>
-                                <option value="both" class="bg-primary">Complete Package</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-slate-300 mb-2">Message</label>
-                            <textarea rows="4" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:border-accent transition-colors resize-none" placeholder="Tell us about your project goals..."></textarea>
-                        </div>
-                        
-                        <button type="submit" class="w-full py-4 bg-accent text-white rounded-xl font-semibold hover:bg-blue-600 transition-all duration-300 flex items-center justify-center gap-2 group">
-                            Send Message
-                            <i data-lucide="send" class="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
-                        </button>
-                        
-                        <div id="form-success" class="hidden text-green-400 text-center text-sm">
-                            <i data-lucide="check-circle" class="w-4 h-4 inline mr-1"></i>
-                            Message sent successfully! We'll be in touch soon.
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+  <footer id="section-footer">
+    <p class="footer-cta">Got a project?<br>Let's build it.</p>
+    <a class="footer-email" href="mailto:anstettjulien@gmail.com">anstettjulien@gmail.com</a>
+    <p class="footer-copy">© 2026 Helios Digital — Julien Anstett</p>
+  </footer>
 
-    <!-- Footer -->
-    <footer class="bg-slate-950 py-12 border-t border-white/10">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-gradient-to-br from-accent to-purple-600 rounded-lg flex items-center justify-center">
-                        <i data-lucide="target" class="w-5 h-5 text-white"></i>
-                    </div>
-                    <span class="text-white font-serif text-xl font-semibold">Helios Digital</span>
-                </div>
-                
-                <div class="flex items-center gap-8 text-sm text-slate-400">
-                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
-                    <a href="#" class="hover:text-white transition-colors">Sitemap</a>
-                </div>
-                
-                <div class="flex items-center gap-4">
-                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-accent transition-colors group">
-                        <i data-lucide="twitter" class="w-4 h-4 text-slate-400 group-hover:text-white"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-accent transition-colors group">
-                        <i data-lucide="linkedin" class="w-4 h-4 text-slate-400 group-hover:text-white"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-accent transition-colors group">
-                        <i data-lucide="instagram" class="w-4 h-4 text-slate-400 group-hover:text-white"></i>
-                    </a>
-                </div>
-            </div>
-            
-            <div class="mt-8 pt-8 border-t border-white/5 text-center text-slate-600 text-sm">
-                © 2026 Helios Digital. All rights reserved. Crafted with precision.
-            </div>
-        </div>
-    </footer>
+</div>
 
-    <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
-        
-        // Spotlight Effect
-        const spotlight = document.getElementById('spotlight');
-        const hero = document.getElementById('hero');
-        
-        hero.addEventListener('mousemove', (e) => {
-            const rect = hero.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            spotlight.style.setProperty('--x', `${x}px`);
-            spotlight.style.setProperty('--y', `${y}px`);
-        });
-        
-        // Magnetic Button Effect
-        const magneticBtns = document.querySelectorAll('.magnetic-btn');
-        
-        magneticBtns.forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                
-                btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-            });
-            
-            btn.addEventListener('mouseleave', () => {
-                btn.style.transform = 'translate(0, 0)';
-            });
-        });
-        
-        // Scroll Reveal Animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, observerOptions);
-        
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-        
-        // Navbar Scroll Effect
-        const navbar = document.getElementById('navbar');
-        let lastScroll = 0;
-        
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            
-            if (currentScroll > 100) {
-                navbar.classList.add('glass', 'border-b', 'border-white/10');
-            } else {
-                navbar.classList.remove('glass', 'border-b', 'border-white/10');
-            }
-            
-            lastScroll = currentScroll;
-        });
-        
-        // Mobile Menu Toggle
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
-        
-        // Form Handling
-        document.getElementById('contact-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Simulate form submission
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Sending...';
-            lucide.createIcons();
-            btn.disabled = true;
-            
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                lucide.createIcons();
-                btn.disabled = false;
-                document.getElementById('form-success').classList.remove('hidden');
-                e.target.reset();
-                
-                setTimeout(() => {
-                    document.getElementById('form-success').classList.add('hidden');
-                }, 5000);
-            }, 1500);
-        });
-        
-        // Smooth Scroll for Anchor Links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                    // Close mobile menu if open
-                    document.getElementById('mobile-menu').classList.add('hidden');
-                }
-            });
-        });
-    </script>
+<script>
+const output   = document.getElementById('output');
+const termCur  = document.getElementById('term-cursor');
+const terminal = document.getElementById('terminal');
+const bg       = document.getElementById('bg');
+const logoOv   = document.getElementById('logo-overlay');
+const bootOv   = document.getElementById('boot-overlay');
+const mainNav  = document.getElementById('main-nav');
+const bottomBar= document.getElementById('bottom-bar');
+const scrollW  = document.getElementById('scroll-wrap');
+const dot      = document.getElementById('cursor-dot');
+const ring     = document.getElementById('cursor-ring');
+const cvs      = document.getElementById('binary-canvas');
+const ctx      = cvs.getContext('2d');
+
+const LINES = [
+  { text: 'HELIOS_OS v2.6.0 // BOOT SEQUENCE INITIATED' },
+  { text: '' },
+  { text: 'SYS.NAME  : HELIOS_DIGITAL',    cls: 'dim' },
+  { text: 'SYS.AUTH  : ACCESS_GRANTED',    cls: 'dim' },
+  { text: 'SYS.NODE  : heliosdigital.org', cls: 'dim' },
+  { text: 'STATUS    : 200 OK',            cls: 'dim' },
+  { text: '' },
+  { text: '$ init modules...', pause: 280 },
+  { text: '  [✓] network.interface       online' },
+  { text: '  [✓] render.engine           loaded' },
+  { text: '  [✓] portfolio.db            4 projects mounted' },
+  { text: '  [✓] contact.api             :443' },
+  { text: '' },
+  { text: '$ whoami', pause: 200 },
+  { text: '  Julien Anstett — engineer & builder.' },
+  { text: '  Web · Mobile · AI. Solo, by design.' },
+  { text: '' },
+  { text: '$ ./launch.sh', pause: 380 },
+  { text: '  Entering simulation ▌' },
+];
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function typeLine(text, cls='', pause=0) {
+  if (pause) await sleep(pause);
+  const span = document.createElement('span');
+  if (cls) span.className = cls;
+  output.appendChild(span);
+  for (const ch of text) { span.textContent += ch; await sleep(16); }
+  output.appendChild(document.createTextNode('\n'));
+  await sleep(65);
+}
+
+async function runBoot() {
+  for (const l of LINES) await typeLine(l.text, l.cls||'', l.pause||0);
+
+  await sleep(500);
+  termCur.style.display = 'none';
+  terminal.classList.add('flicker');
+  await sleep(150);
+  bg.classList.add('visible');
+  await sleep(400);
+  logoOv.classList.add('visible');
+  await sleep(1800);
+  logoOv.classList.add('fadeout');
+  await sleep(900);
+  terminal.classList.add('hidden');
+
+  // Boot done — show page
+  bootOv.style.display = 'none';
+  scrollW.classList.add('visible');
+  mainNav.classList.add('visible');
+  bottomBar.classList.add('visible');
+  dot.classList.add('active');
+  ring.classList.add('active');
+  binaryActive = true;
+
+  // Stagger hero lines
+  await sleep(300);
+  const lines = document.querySelectorAll('.hero-line-inner');
+  for (const ln of lines) {
+    ln.classList.add('in');
+    await sleep(85);
+  }
+}
+
+runBoot();
+
+// Cursor
+let mx = window.innerWidth/2, my = window.innerHeight/2, rx = mx, ry = my;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx+'px'; dot.style.top = my+'px';
+});
+(function loop() {
+  rx += (mx-rx)*.1; ry += (my-ry)*.1;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(loop);
+})();
+
+// Binary canvas
+let binaryActive = false;
+const FS = 9;
+let cols, rows, grid = [];
+function resize() {
+  cvs.width = innerWidth; cvs.height = innerHeight;
+  cols = Math.ceil(cvs.width/FS); rows = Math.ceil(cvs.height/FS);
+  grid = Array.from({length:rows},()=>Array.from({length:cols},()=>Math.random()>.5?'1':'0'));
+}
+resize();
+addEventListener('resize', resize);
+setInterval(()=>{
+  if(!rows||!cols) return;
+  grid[Math.floor(Math.random()*rows)][Math.floor(Math.random()*cols)] = Math.random()>.5?'1':'0';
+},40);
+function draw() {
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  if(binaryActive) {
+    ctx.font=`${FS}px 'Share Tech Mono',monospace`; ctx.textAlign='left';
+    for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) {
+      const x=c*FS,y=r*FS+FS,d=Math.hypot(x-mx,y-my);
+      if(d>90) continue;
+      ctx.fillStyle=`rgba(0,255,157,${(1-d/90)*.2})`;
+      ctx.fillText(grid[r][c],x,y);
+    }
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
 </body>
 </html>
