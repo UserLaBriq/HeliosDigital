@@ -12,13 +12,18 @@
 
 :root {
   --green: #00ff9d;
-  --dim: #00804e;
-  --bg: #050a07;
+  --dim:   #00804e;
+  --bg:    #050a07;
+  --dark:  #07100a;
   --white: #f5f4f0;
-  --pad: clamp(1.5rem, 4vw, 3rem);
+  --pad:   clamp(1.5rem, 4vw, 3rem);
 }
 
-html, body { width: 100%; height: 100%; background: var(--bg); }
+html, body {
+  background: var(--dark);
+  overscroll-behavior: none;
+}
+html.booting { overflow: hidden; }
 
 /* ── BOOT OVERLAY ── */
 #boot-overlay {
@@ -26,17 +31,41 @@ html, body { width: 100%; height: 100%; background: var(--bg); }
   background: var(--bg);
 }
 
-/* ── BG IMAGE ── */
+/* ── FOND IMAGE : fixe, uniquement visible sous le hero ── */
 #bg {
-  position: fixed; inset: -3%; z-index: 0;
-  background: url('./assets/images/2xgrass.png') center/cover no-repeat;
+  position: fixed; inset: 0; z-index: 0;
+  background: url('./assets/images/2xgrass.png') center top / cover no-repeat;
   opacity: 0; transition: opacity 2s ease;
 }
 #bg.visible { opacity: 1; }
 #bg::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(0,0,0,.65) 0%, rgba(0,0,0,.28) 60%, rgba(0,0,0,.45) 100%);
+  background: linear-gradient(160deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.22) 50%, rgba(0,0,0,.5) 100%);
 }
+
+/* ── CURSOR ── */
+* { cursor: none !important; }
+#cursor-dot {
+  position: fixed; z-index: 9999; pointer-events: none;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--white); transform: translate(-50%,-50%);
+  mix-blend-mode: difference; opacity: 0; transition: opacity .4s ease;
+}
+#cursor-ring {
+  position: fixed; z-index: 9998; pointer-events: none;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.3); border-radius: 50%;
+  transform: translate(-50%,-50%);
+  opacity: 0; transition: opacity .4s ease;
+}
+#cursor-dot.active, #cursor-ring.active { opacity: 1; }
+
+/* ── BINARY CANVAS : fixed, masqué dès qu'on quitte le hero ── */
+#binary-canvas {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  transition: opacity .6s ease;
+}
+#binary-canvas.hidden { opacity: 0; }
 
 /* ── TERMINAL ── */
 #terminal {
@@ -72,7 +101,7 @@ html, body { width: 100%; height: 100%; background: var(--bg); }
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   pointer-events: none; opacity: 0;
-  transition: opacity 1.2s ease 0.3s;
+  transition: opacity 1.2s ease .3s;
 }
 #logo-overlay.visible { opacity: 1; }
 #logo-overlay.fadeout { opacity: 0; transition: opacity 1.4s ease; }
@@ -91,26 +120,6 @@ html, body { width: 100%; height: 100%; background: var(--bg); }
   margin-top: .9rem; text-transform: uppercase;
 }
 
-/* ── CURSOR ── */
-* { cursor: none !important; }
-#cursor-dot {
-  position: fixed; z-index: 9999; pointer-events: none;
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--white); transform: translate(-50%,-50%);
-  mix-blend-mode: difference; opacity: 0; transition: opacity .4s ease;
-}
-#cursor-ring {
-  position: fixed; z-index: 9998; pointer-events: none;
-  width: 36px; height: 36px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.3);
-  transform: translate(-50%,-50%);
-  opacity: 0; transition: opacity .4s ease;
-}
-#cursor-dot.active, #cursor-ring.active { opacity: 1; }
-
-/* ── BINARY CANVAS ── */
-#binary-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
-
 /* ── NAV ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
@@ -120,13 +129,13 @@ nav {
 }
 nav.visible { opacity: 1; }
 .nav-name {
-  font-family: 'Syne', sans-serif; font-size: clamp(.75rem,1.1vw,.95rem);
+  font-family: 'Syne', sans-serif; font-size: clamp(.75rem, 1.1vw, .95rem);
   font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
   color: var(--white); text-decoration: none; opacity: .9;
 }
 .nav-right { display: flex; align-items: center; gap: 2rem; }
 .nav-link {
-  font-family: 'Syne', sans-serif; font-size: clamp(.7rem,1vw,.88rem);
+  font-family: 'Syne', sans-serif; font-size: clamp(.7rem, 1vw, .88rem);
   font-weight: 400; letter-spacing: .14em; text-transform: uppercase;
   color: var(--white); text-decoration: none;
   opacity: .7; transition: opacity .25s ease; position: relative;
@@ -141,19 +150,19 @@ nav.visible { opacity: 1; }
 
 /* ── BOTTOM BAR ── */
 #bottom-bar {
-  position: fixed; bottom: clamp(1.2rem,3vw,2.2rem);
+  position: fixed; bottom: clamp(1.2rem, 3vw, 2.2rem);
   left: var(--pad); right: var(--pad);
   display: flex; align-items: flex-end; justify-content: space-between;
   z-index: 50; opacity: 0; transition: opacity .8s ease; pointer-events: none;
 }
 #bottom-bar.visible { opacity: 1; }
 .bottom-name {
-  font-family: 'Syne', sans-serif; font-size: clamp(.65rem,.95vw,.82rem);
+  font-family: 'Syne', sans-serif; font-size: clamp(.65rem, .95vw, .82rem);
   font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
   color: var(--white); opacity: .75;
 }
 .scroll-hint {
-  font-family: 'Syne', sans-serif; font-size: clamp(.6rem,.85vw,.72rem);
+  font-family: 'Syne', sans-serif; font-size: clamp(.6rem, .85vw, .72rem);
   letter-spacing: .22em; text-transform: uppercase;
   color: var(--white); opacity: .4;
   display: flex; align-items: center; gap: .6rem;
@@ -162,25 +171,22 @@ nav.visible { opacity: 1; }
 @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
 .scroll-line { width: 28px; height: 1px; background: var(--white); opacity: .4; }
 
-/* ── SCROLL WRAP ── */
-#scroll-wrap {
-  position: relative; z-index: 2;
-  height: 100vh; overflow-y: auto; overflow-x: hidden;
-  scroll-snap-type: y mandatory; scroll-behavior: smooth;
-  visibility: hidden;
-}
-#scroll-wrap.visible { visibility: visible; }
+/* ════════════════════════════════
+   PAGE CONTENT — scroll natif
+   ════════════════════════════════ */
+#page-content { position: relative; z-index: 2; visibility: hidden; }
+#page-content.visible { visibility: visible; }
 
-/* ── HERO SECTION ── */
+/* ── HERO ── */
 #section-hero {
-  height: 100vh; scroll-snap-align: start;
+  height: 100vh; position: relative;
   display: flex; flex-direction: column;
   justify-content: flex-end; align-items: flex-end;
-  padding: 0 var(--pad); padding-bottom: clamp(5rem,10vh,7rem);
+  padding: 0 var(--pad) clamp(5rem, 10vh, 7rem);
 }
 .hero-text {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(.78rem,1.05vw,1rem);
+  font-size: clamp(.78rem, 1.05vw, 1rem);
   line-height: 1.78; color: var(--white);
   max-width: 340px; font-weight: 400;
   text-align: justify; text-justify: inter-word;
@@ -192,139 +198,257 @@ nav.visible { opacity: 1; }
   transition: transform .7s cubic-bezier(.16,1,.3,1), opacity .5s ease;
 }
 .hero-line-inner.in { transform: translateY(0); opacity: 1; }
-.hero-text em { font-style: italic; opacity: .82; }
+/* ── EM : glitch flicker ── */
+.hero-text em {
+  font-style: italic; opacity: .82;
+  transition: opacity .2s ease;
+  position: relative;
+}
+.hero-text em:hover {
+  opacity: 1;
+  animation: glitch .5s steps(1) forwards;
+}
+@keyframes glitch {
+  0%   { text-shadow: 2px 0 rgba(0,255,157,.7), -2px 0 rgba(255,60,60,.6); transform: translateX(0); }
+  10%  { text-shadow: -3px 0 rgba(0,255,157,.7), 3px 0 rgba(255,60,60,.6); transform: translateX(2px); }
+  20%  { text-shadow: 3px 0 rgba(0,255,157,.7), -3px 0 rgba(255,60,60,.6); transform: translateX(-2px); }
+  30%  { text-shadow: -2px 0 rgba(0,255,157,.7), 2px 0 rgba(255,60,60,.6); transform: translateX(1px); }
+  40%  { text-shadow: none; transform: translateX(0); }
+  50%  { text-shadow: 2px 0 rgba(0,255,157,.5), -2px 0 rgba(255,60,60,.4); transform: translateX(-1px); }
+  60%  { text-shadow: none; transform: translateX(0); }
+  100% { text-shadow: none; transform: translateX(0); }
+}
+
+/* ── STRONG : base commune ── */
 .hero-text strong {
   font-family: 'Syne', sans-serif; font-weight: 700;
-  font-style: normal; font-size: .8em; letter-spacing: .1em;
+  font-size: .8em; letter-spacing: .1em;
+  position: relative; display: inline-block;
 }
 
-/* ── WORKS SECTION ── */
-#section-works {
-  min-height: 100vh; scroll-snap-align: start;
-  padding: clamp(5rem,10vh,8rem) var(--pad) clamp(4rem,8vh,6rem);
+/* ── FRANCE & LUXEMBOURG : reveal character par character (clip left→right) ── */
+.s-location {
+  transition: color .3s ease;
+  background: linear-gradient(90deg, var(--green) 50%, var(--white) 50%);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: background-position .5s cubic-bezier(.16,1,.3,1);
 }
-.works-header {
-  font-family: 'Syne', sans-serif; font-size: clamp(.62rem,.88vw,.76rem);
-  font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
-  color: var(--green); opacity: .65; margin-bottom: clamp(2.5rem,5vh,4rem);
-}
-.works-grid {
-  display: grid; grid-template-columns: repeat(2,1fr);
-  gap: 1px; background: rgba(255,255,255,.07);
-}
-@media (max-width: 680px) { .works-grid { grid-template-columns: 1fr; } }
+.s-location:hover { background-position: 0% 0; }
 
-/* project card */
-.project-card {
-  background: rgba(4,9,6,.88);
-  position: relative; overflow: hidden;
-  aspect-ratio: 16/10;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 1.5rem; text-decoration: none;
-  transition: background .35s ease;
+/* ── COLLABORATE WITH AGENCIES : underline qui s'étire + skew léger ── */
+.s-collab {
+  transition: letter-spacing .4s cubic-bezier(.16,1,.3,1), transform .3s cubic-bezier(.16,1,.3,1), color .3s ease;
 }
-.project-card:hover { background: rgba(8,18,10,.7); }
+.s-collab::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 0;
+  width: 0; height: 1px;
+  background: linear-gradient(90deg, var(--green), transparent);
+  transition: width .45s cubic-bezier(.16,1,.3,1);
+}
+.s-collab:hover {
+  letter-spacing: .16em;
+  transform: skewX(-4deg);
+  color: var(--white);
+}
+.s-collab:hover::after { width: 100%; }
 
-.card-visual {
-  position: absolute; inset: 0; opacity: .16;
-  transition: opacity .4s ease;
+/* ── STARTUPS & FOUNDERS : flip vertical (rotateX) ── */
+.s-founders {
+  transform-style: preserve-3d;
+  transition: transform .5s cubic-bezier(.16,1,.3,1), color .3s ease, text-shadow .3s ease;
+  transform-origin: center bottom;
 }
-.project-card:hover .card-visual { opacity: .3; }
-
-.visual-cibo {
-  background:
-    radial-gradient(circle at 30% 65%, rgba(0,255,157,.55) 0%, transparent 52%),
-    radial-gradient(circle at 78% 28%, rgba(0,200,110,.28) 0%, transparent 42%);
-}
-.visual-qr {
-  background:
-    linear-gradient(140deg, rgba(210,190,150,.4) 0%, transparent 55%),
-    repeating-linear-gradient(90deg, transparent, transparent 38px, rgba(210,190,150,.05) 38px, rgba(210,190,150,.05) 39px);
-}
-.visual-auto {
-  background:
-    radial-gradient(ellipse at 50% 50%, rgba(0,255,157,.12) 0%, transparent 68%),
-    repeating-linear-gradient(0deg, transparent, transparent 16px, rgba(0,255,157,.06) 16px, rgba(0,255,157,.06) 17px),
-    repeating-linear-gradient(90deg, transparent, transparent 16px, rgba(0,255,157,.06) 16px, rgba(0,255,157,.06) 17px);
-}
-.visual-fpv {
-  background:
-    radial-gradient(circle at 62% 38%, rgba(255,130,0,.32) 0%, transparent 52%),
-    radial-gradient(circle at 22% 72%, rgba(255,70,0,.18) 0%, transparent 38%);
-}
-
-.card-arrow {
-  position: absolute; top: 1.3rem; right: 1.3rem;
-  width: 26px; height: 26px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.15);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--white); font-size: .65rem;
-  opacity: 0; transition: opacity .3s ease, transform .3s ease;
-  transform: translateY(4px);
-}
-.project-card:hover .card-arrow { opacity: .55; transform: translateY(0); }
-
-.wip-badge {
-  position: absolute; top: 1.1rem; left: 1.1rem;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: .48rem; letter-spacing: .15em; text-transform: uppercase;
-  padding: .18rem .5rem;
-  background: rgba(0,255,157,.08);
-  border: 1px solid rgba(0,255,157,.22);
+.s-founders:hover {
+  transform: rotateX(18deg) translateY(-3px);
   color: var(--green);
+  text-shadow: 0 6px 18px rgba(0,255,157,.3);
 }
 
-.card-tag {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(.52rem,.72vw,.62rem);
-  letter-spacing: .16em; text-transform: uppercase;
-  color: var(--green); opacity: .65; margin-bottom: .45rem;
+/* ── AI, WEB & MOBILE : glitch data-text ── */
+.s-tech {
+  transition: color .2s ease;
 }
-.card-title {
+.s-tech::before,
+.s-tech::after {
+  content: 'AI, WEB & MOBILE';
+  position: absolute; top: 0; left: 0;
+  width: 100%;
+  opacity: 0;
+  font-family: 'Share Tech Mono', monospace;
+}
+.s-tech::before { color: #ff3c3c; }
+.s-tech::after  { color: #3cffee; }
+
+.s-tech:hover { color: var(--white); }
+.s-tech:hover::before {
+  opacity: .7;
+  animation: glitch-r .4s steps(1) infinite;
+}
+.s-tech:hover::after {
+  opacity: .7;
+  animation: glitch-l .4s steps(1) infinite .05s;
+}
+@keyframes glitch-r {
+  0%  { clip-path: inset(20% 0 60% 0); transform: translateX(3px); }
+  25% { clip-path: inset(55% 0 10% 0); transform: translateX(-2px); }
+  50% { clip-path: inset(5%  0 80% 0); transform: translateX(2px); }
+  75% { clip-path: inset(70% 0 5%  0); transform: translateX(-3px); }
+  100%{ clip-path: inset(35% 0 40% 0); transform: translateX(1px); }
+}
+@keyframes glitch-l {
+  0%  { clip-path: inset(60% 0 15% 0); transform: translateX(-3px); }
+  25% { clip-path: inset(10% 0 55% 0); transform: translateX(2px); }
+  50% { clip-path: inset(80% 0 5%  0); transform: translateX(-2px); }
+  75% { clip-path: inset(5%  0 70% 0); transform: translateX(3px); }
+  100%{ clip-path: inset(40% 0 30% 0); transform: translateX(-1px); }
+}
+
+/* ── TRANSITION hero → works ── */
+#section-works {
+  position: relative;
+  background: #f0ede6;
+  min-height: 100vh;
+  padding: clamp(5rem, 10vh, 8rem) var(--pad) clamp(4rem, 8vh, 6rem);
+  box-shadow: inset 0 12px 32px rgba(0,0,0,.18);
+}
+
+#section-works::before { display: none; }
+
+.works-header {
+  font-family: 'Syne', sans-serif; font-size: clamp(.6rem, .8vw, .7rem);
+  font-weight: 700; letter-spacing: .32em; text-transform: uppercase;
+  color: #8a8478; margin-bottom: clamp(3rem, 6vh, 5rem);
+}
+
+/* ── LISTE PROJETS ── */
+.works-list { display: flex; flex-direction: column; }
+
+.project-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 0 3rem;
+  padding: 2.2rem 0;
+  border-top: 1px solid rgba(0,0,0,.1);
+  text-decoration: none;
+  position: relative;
+  transition: padding-left .45s cubic-bezier(.16,1,.3,1);
+}
+.project-row:last-child { border-bottom: 1px solid rgba(0,0,0,.1); }
+
+/* trait fin qui slide */
+.project-row::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 0;
+  width: 0; height: 1px;
+  background: #1a1a1a;
+  transition: width .5s cubic-bezier(.16,1,.3,1);
+}
+.project-row:hover::after { width: 100%; }
+.project-row:hover { padding-left: .6rem; }
+
+/* gauche */
+.row-main { min-width: 0; }
+
+.row-head {
+  display: flex; align-items: baseline; gap: 1.2rem;
+  margin-bottom: .5rem; flex-wrap: wrap;
+}
+
+.row-title {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(1.1rem,2vw,1.55rem);
-  color: var(--white); font-weight: 400; line-height: 1.2;
-  margin-bottom: .35rem;
+  font-size: clamp(1.6rem, 3.2vw, 2.8rem);
+  color: #1a1a18; font-weight: 400; line-height: 1;
+  transition: letter-spacing .45s cubic-bezier(.16,1,.3,1);
 }
-.card-desc {
+.project-row:hover .row-title { letter-spacing: .02em; }
+
+.row-tag {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(.6rem,.82vw,.72rem);
-  color: var(--white); opacity: .45;
-  line-height: 1.5; max-width: 300px;
+  font-size: clamp(.58rem, .72vw, .65rem);
+  letter-spacing: .08em;
+  color: #9a9488; font-weight: 400;
 }
-.card-stack { display: flex; gap: .35rem; flex-wrap: wrap; margin-top: .65rem; }
+
+.row-desc {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(.65rem, .85vw, .76rem);
+  color: #6b6860; line-height: 1.6;
+  max-width: 520px;
+  opacity: 0; transform: translateY(4px);
+  transition: opacity .35s ease, transform .35s ease;
+}
+.project-row:hover .row-desc { opacity: 1; transform: translateY(0); }
+
+/* droite */
+.row-right {
+  display: flex; flex-direction: column;
+  align-items: flex-end; gap: .5rem;
+  flex-shrink: 0; padding-bottom: .15rem;
+}
+
+.row-stack {
+  display: flex; gap: .5rem; flex-wrap: wrap; justify-content: flex-end;
+}
 .chip {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(.48rem,.62vw,.56rem);
-  letter-spacing: .1em; text-transform: uppercase;
-  padding: .16rem .45rem;
-  border: 1px solid rgba(0,255,157,.22);
-  color: var(--green); opacity: .6;
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(.56rem, .68vw, .62rem);
+  letter-spacing: .04em;
+  color: #9a9488;
+  transition: color .3s ease;
+}
+.chip + .chip::before { content: '·'; margin-right: .5rem; color: #c5c0b6; }
+.project-row:hover .chip { color: #4a4840; }
+
+.row-arrow {
+  font-size: 1rem; color: #1a1a18; opacity: 0;
+  transform: translate(-6px, 6px);
+  transition: opacity .3s ease, transform .4s cubic-bezier(.16,1,.3,1);
+}
+.project-row:hover .row-arrow { opacity: .7; transform: translate(0, 0); }
+
+.row-wip {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(.56rem, .68vw, .62rem);
+  letter-spacing: .08em;
+  color: #b0aa9e;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .project-row { grid-template-columns: 1fr; }
+  .row-right { display: none; }
 }
 
 /* ── FOOTER ── */
 #section-footer {
-  padding: clamp(3.5rem,7vh,6rem) var(--pad) clamp(2.5rem,5vh,4rem);
+  background: #e8e4dc;
+  padding: clamp(3.5rem, 7vh, 6rem) var(--pad) clamp(2.5rem, 5vh, 4rem);
   display: flex; flex-direction: column; align-items: center; gap: 1rem;
-  border-top: 1px solid rgba(255,255,255,.07);
+  border-top: 1px solid rgba(0,0,0,.08);
 }
 .footer-cta {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(1.5rem,3.2vw,2.4rem);
-  color: var(--white); text-align: center; font-weight: 400; line-height: 1.3;
+  font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+  color: #1a1a18; text-align: center; font-weight: 400; line-height: 1.3;
 }
 .footer-email {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(.7rem,1vw,.88rem);
-  letter-spacing: .18em; text-transform: uppercase;
-  color: var(--green); text-decoration: none; opacity: .8;
-  transition: opacity .25s;
+  font-size: clamp(.7rem, 1vw, .88rem);
+  letter-spacing: .14em; text-transform: uppercase;
+  color: #6b6860; text-decoration: none;
+  transition: color .25s ease;
 }
-.footer-email:hover { opacity: 1; }
+.footer-email:hover { color: #1a1a18; }
 .footer-copy {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: .58rem; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--white); opacity: .22; margin-top: 1.5rem;
+  font-family: 'Syne', sans-serif;
+  font-size: .6rem; letter-spacing: .1em; text-transform: uppercase;
+  color: #b0aa9e; margin-top: 1.5rem;
 }
 </style>
 </head>
@@ -337,9 +461,7 @@ nav.visible { opacity: 1; }
 
 <!-- Boot -->
 <div id="boot-overlay">
-  <div id="terminal">
-    <div id="output"></div><span id="term-cursor"></span>
-  </div>
+  <div id="terminal"><div id="output"></div><span id="term-cursor"></span></div>
   <div id="logo-overlay">
     <div id="logo-text">Helios</div>
     <div id="logo-sub">Digital&nbsp;&nbsp;//&nbsp;&nbsp;System Ready</div>
@@ -359,72 +481,92 @@ nav.visible { opacity: 1; }
   <span class="scroll-hint"><span class="scroll-line"></span> Scroll</span>
 </div>
 
-<!-- Scrollable -->
-<div id="scroll-wrap">
+<!-- Page content — scroll natif -->
+<div id="page-content">
 
   <section id="section-hero">
     <p class="hero-text">
       <span class="hero-line"><span class="hero-line-inner">Hey there,</span></span>
       <span class="hero-line"><span class="hero-line-inner">&nbsp;</span></span>
       <span class="hero-line"><span class="hero-line-inner">I am a <em>freelance engineer & developer</em></span></span>
-      <span class="hero-line"><span class="hero-line-inner">based between <strong>FRANCE & SWITZERLAND</strong>.</span></span>
-      <span class="hero-line"><span class="hero-line-inner">I <strong>COLLABORATE WITH AGENCIES,</strong></span></span>
-      <span class="hero-line"><span class="hero-line-inner"><strong>STARTUPS & FOUNDERS</strong> to build</span></span>
+      <span class="hero-line"><span class="hero-line-inner">based between <strong class="s-location">FRANCE & LUXEMBOURG</strong>.</span></span>
+      <span class="hero-line"><span class="hero-line-inner">I <strong class="s-collab">COLLABORATE WITH AGENCIES,</strong></span></span>
+      <span class="hero-line"><span class="hero-line-inner"><strong class="s-founders">STARTUPS & FOUNDERS</strong> to build</span></span>
       <span class="hero-line"><span class="hero-line-inner">modern and reliable products, with</span></span>
-      <span class="hero-line"><span class="hero-line-inner">a special attention to <strong>AI, WEB & MOBILE</strong></span></span>
+      <span class="hero-line"><span class="hero-line-inner">a special attention to <strong class="s-tech">AI, WEB & MOBILE</strong></span></span>
       <span class="hero-line"><span class="hero-line-inner">— and to things that actually <em>work</em>.</span></span>
     </p>
   </section>
 
   <section id="section-works">
-    <p class="works-header">// Selected work</p>
-    <div class="works-grid">
+    <p class="works-header">Selected work</p>
+    <div class="works-list">
 
-      <a class="project-card" href="https://apps.apple.com/it/app/ciboai/id6757018806" target="_blank">
-        <div class="card-visual visual-cibo"></div>
-        <div class="card-arrow">↗</div>
-        <span class="card-tag">iOS App · 2025</span>
-        <h2 class="card-title">CiboAI</h2>
-        <p class="card-desc">AI-powered recipe finder. Built solo and shipped to the App Store in ~10 days.</p>
-        <div class="card-stack">
-          <span class="chip">Expo</span><span class="chip">SwiftUI</span>
-          <span class="chip">GPT-4o</span><span class="chip">App Store</span>
+      <a class="project-row" href="https://apps.apple.com/it/app/ciboai/id6757018806" target="_blank">
+        <div class="row-main">
+          <div class="row-head">
+            <span class="row-title">CiboAI</span>
+            <span class="row-tag">iOS App · 2025</span>
+          </div>
+          <p class="row-desc">AI-powered recipe finder. Built solo and shipped to the App Store in ~10 days.</p>
+        </div>
+        <div class="row-right">
+          <div class="row-stack">
+            <span class="chip">Expo</span><span class="chip">SwiftUI</span>
+            <span class="chip">GPT-4o</span><span class="chip">App Store</span>
+          </div>
+          <span class="row-arrow">↗</span>
         </div>
       </a>
 
-      <a class="project-card" href="https://userlabriq.github.io/QR/" target="_blank">
-        <div class="card-visual visual-qr"></div>
-        <div class="card-arrow">↗</div>
-        <span class="card-tag">Web · Live</span>
-        <h2 class="card-title">QR Avocat</h2>
-        <p class="card-desc">Website for Paris Bar attorney Quentin Rapaud — glassmorphism, custom animations, legal pages.</p>
-        <div class="card-stack">
-          <span class="chip">HTML</span><span class="chip">Tailwind</span>
-          <span class="chip">JS</span><span class="chip">OVH</span>
+      <a class="project-row" href="https://www.quentinrapaud-avocat.com/" target="_blank">
+        <div class="row-main">
+          <div class="row-head">
+            <span class="row-title">QR Avocat</span>
+            <span class="row-tag">Web · Live</span>
+          </div>
+          <p class="row-desc">Website for Paris Bar attorney Quentin Rapaud — glassmorphism, custom animations, legal pages.</p>
+        </div>
+        <div class="row-right">
+          <div class="row-stack">
+            <span class="chip">HTML</span><span class="chip">Tailwind</span>
+            <span class="chip">JS</span><span class="chip">OVH</span>
+          </div>
+          <span class="row-arrow">↗</span>
         </div>
       </a>
 
-      <a class="project-card" href="#" style="pointer-events:none;">
-        <div class="card-visual visual-auto"></div>
-        <div class="wip-badge">Portfolio</div>
-        <span class="card-tag">Computer Vision · 2024</span>
-        <h2 class="card-title">AutoReckon</h2>
-        <p class="card-desc">3-stage CV pipeline — vehicle detection, license plate OCR & model classification. 2.2ms inference.</p>
-        <div class="card-stack">
-          <span class="chip">PyTorch</span><span class="chip">YOLOv5</span>
-          <span class="chip">ResNet50</span><span class="chip">VGG16</span>
+      <a class="project-row" href="#" style="pointer-events:none;">
+        <div class="row-main">
+          <div class="row-head">
+            <span class="row-title">AutoReckon</span>
+            <span class="row-tag">Computer Vision · 2024</span>
+          </div>
+          <p class="row-desc">3-stage CV pipeline — vehicle detection, license plate OCR & model classification. 2.2ms inference.</p>
+        </div>
+        <div class="row-right">
+          <div class="row-stack">
+            <span class="chip">PyTorch</span><span class="chip">YOLOv5</span>
+            <span class="chip">ResNet50</span><span class="chip">VGG16</span>
+          </div>
+          <span class="row-wip">In progress</span>
         </div>
       </a>
 
-      <a class="project-card" href="#" style="pointer-events:none;">
-        <div class="card-visual visual-fpv"></div>
-        <div class="wip-badge">Build log</div>
-        <span class="card-tag">Hardware · Fabrication</span>
-        <h2 class="card-title">FPV Long Range</h2>
-        <p class="card-desc">Full drone build from scratch — CAD frame, 3D-printed parts, electronics wiring & Betaflight tuning.</p>
-        <div class="card-stack">
-          <span class="chip">3D Print</span><span class="chip">Betaflight</span>
-          <span class="chip">ExpressLRS</span><span class="chip">CAD</span>
+      <a class="project-row" href="#" style="pointer-events:none;">
+        <div class="row-main">
+          <div class="row-head">
+            <span class="row-title">FPV Long Range</span>
+            <span class="row-tag">Hardware · Fabrication</span>
+          </div>
+          <p class="row-desc">Full drone build from scratch — CAD frame, 3D-printed parts, electronics wiring & Betaflight tuning.</p>
+        </div>
+        <div class="row-right">
+          <div class="row-stack">
+            <span class="chip">3D Print</span><span class="chip">Betaflight</span>
+            <span class="chip">ExpressLRS</span><span class="chip">CAD</span>
+          </div>
+          <span class="row-wip">Build log</span>
         </div>
       </a>
 
@@ -440,20 +582,37 @@ nav.visible { opacity: 1; }
 </div>
 
 <script>
-const output   = document.getElementById('output');
-const termCur  = document.getElementById('term-cursor');
-const terminal = document.getElementById('terminal');
-const bg       = document.getElementById('bg');
-const logoOv   = document.getElementById('logo-overlay');
-const bootOv   = document.getElementById('boot-overlay');
-const mainNav  = document.getElementById('main-nav');
-const bottomBar= document.getElementById('bottom-bar');
-const scrollW  = document.getElementById('scroll-wrap');
-const dot      = document.getElementById('cursor-dot');
-const ring     = document.getElementById('cursor-ring');
-const cvs      = document.getElementById('binary-canvas');
-const ctx      = cvs.getContext('2d');
+const output      = document.getElementById('output');
+const termCur     = document.getElementById('term-cursor');
+const terminal    = document.getElementById('terminal');
+const bgEl        = document.getElementById('bg');
+const logoOv      = document.getElementById('logo-overlay');
+const bootOv      = document.getElementById('boot-overlay');
+const mainNav     = document.getElementById('main-nav');
+const bottomBar   = document.getElementById('bottom-bar');
+const pageContent = document.getElementById('page-content');
+const dot         = document.getElementById('cursor-dot');
+const ring        = document.getElementById('cursor-ring');
+const cvs         = document.getElementById('binary-canvas');
+const ctx         = cvs.getContext('2d');
+const heroSection = document.getElementById('section-hero');
 
+/* ─── BINARY : visible uniquement sur le hero ─── */
+let binaryActive  = false;
+let binaryVisible = true;
+
+function updateBinaryVisibility() {
+  const heroBottom = heroSection.getBoundingClientRect().bottom;
+  // fade out dès qu'on commence à quitter le hero
+  if (heroBottom < window.innerHeight * 0.2) {
+    if (binaryVisible) { cvs.classList.add('hidden'); binaryVisible = false; }
+  } else {
+    if (!binaryVisible) { cvs.classList.remove('hidden'); binaryVisible = true; }
+  }
+}
+window.addEventListener('scroll', updateBinaryVisibility, { passive: true });
+
+/* ─── BOOT SEQUENCE ─── */
 const LINES = [
   { text: 'HELIOS_OS v2.6.0 // BOOT SEQUENCE INITIATED' },
   { text: '' },
@@ -475,7 +634,6 @@ const LINES = [
   { text: '$ ./launch.sh', pause: 380 },
   { text: '  Entering simulation ▌' },
 ];
-
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function typeLine(text, cls='', pause=0) {
@@ -489,76 +647,77 @@ async function typeLine(text, cls='', pause=0) {
 }
 
 async function runBoot() {
+  document.documentElement.classList.add('booting');
   for (const l of LINES) await typeLine(l.text, l.cls||'', l.pause||0);
-
   await sleep(500);
   termCur.style.display = 'none';
   terminal.classList.add('flicker');
   await sleep(150);
-  bg.classList.add('visible');
+  bgEl.classList.add('visible');
   await sleep(400);
   logoOv.classList.add('visible');
   await sleep(1800);
   logoOv.classList.add('fadeout');
   await sleep(900);
   terminal.classList.add('hidden');
-
-  // Boot done — show page
   bootOv.style.display = 'none';
-  scrollW.classList.add('visible');
+  document.documentElement.classList.remove('booting');
+
+  pageContent.classList.add('visible');
   mainNav.classList.add('visible');
   bottomBar.classList.add('visible');
   dot.classList.add('active');
   ring.classList.add('active');
   binaryActive = true;
 
-  // Stagger hero lines
   await sleep(300);
   const lines = document.querySelectorAll('.hero-line-inner');
-  for (const ln of lines) {
-    ln.classList.add('in');
-    await sleep(85);
-  }
+  for (const ln of lines) { ln.classList.add('in'); await sleep(85); }
 }
-
 runBoot();
 
-// Cursor
+/* ─── CURSOR ─── */
 let mx = window.innerWidth/2, my = window.innerHeight/2, rx = mx, ry = my;
 document.addEventListener('mousemove', e => {
   mx = e.clientX; my = e.clientY;
   dot.style.left = mx+'px'; dot.style.top = my+'px';
 });
-(function loop() {
+(function cursorLoop() {
   rx += (mx-rx)*.1; ry += (my-ry)*.1;
   ring.style.left = rx+'px'; ring.style.top = ry+'px';
-  requestAnimationFrame(loop);
+  requestAnimationFrame(cursorLoop);
 })();
 
-// Binary canvas
-let binaryActive = false;
+/* ─── BINARY CANVAS ─── */
 const FS = 9;
 let cols, rows, grid = [];
 function resize() {
   cvs.width = innerWidth; cvs.height = innerHeight;
   cols = Math.ceil(cvs.width/FS); rows = Math.ceil(cvs.height/FS);
-  grid = Array.from({length:rows},()=>Array.from({length:cols},()=>Math.random()>.5?'1':'0'));
+  grid = Array.from({length:rows}, () =>
+    Array.from({length:cols}, () => Math.random() > .5 ? '1' : '0'));
 }
 resize();
 addEventListener('resize', resize);
-setInterval(()=>{
-  if(!rows||!cols) return;
-  grid[Math.floor(Math.random()*rows)][Math.floor(Math.random()*cols)] = Math.random()>.5?'1':'0';
-},40);
+setInterval(() => {
+  if (!rows || !cols) return;
+  grid[Math.floor(Math.random()*rows)][Math.floor(Math.random()*cols)] =
+    Math.random() > .5 ? '1' : '0';
+}, 40);
+
 function draw() {
-  ctx.clearRect(0,0,cvs.width,cvs.height);
-  if(binaryActive) {
-    ctx.font=`${FS}px 'Share Tech Mono',monospace`; ctx.textAlign='left';
-    for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) {
-      const x=c*FS,y=r*FS+FS,d=Math.hypot(x-mx,y-my);
-      if(d>90) continue;
-      ctx.fillStyle=`rgba(0,255,157,${(1-d/90)*.2})`;
-      ctx.fillText(grid[r][c],x,y);
+  ctx.clearRect(0, 0, cvs.width, cvs.height);
+  if (binaryActive && binaryVisible) {
+    ctx.font = `${FS}px 'Share Tech Mono',monospace`;
+    ctx.textAlign = 'left';
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const x = c*FS, y = r*FS+FS;
+        const d = Math.hypot(x - mx, y - my);
+        if (d > 90) continue;
+        ctx.fillStyle = `rgba(0,255,157,${(1 - d/90) * .2})`;
+        ctx.fillText(grid[r][c], x, y);
+      }
     }
   }
   requestAnimationFrame(draw);
