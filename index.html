@@ -43,8 +43,10 @@ html.booting { overflow: hidden; }
   background: linear-gradient(160deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.22) 50%, rgba(0,0,0,.5) 100%);
 }
 
-/* ── CURSOR ── */
-* { cursor: none !important; }
+/* ── CURSOR : desktop seulement ── */
+@media (pointer: fine) {
+  * { cursor: none !important; }
+}
 #cursor-dot {
   position: fixed; z-index: 9999; pointer-events: none;
   width: 5px; height: 5px; border-radius: 50%;
@@ -54,11 +56,14 @@ html.booting { overflow: hidden; }
 #cursor-ring {
   position: fixed; z-index: 9998; pointer-events: none;
   width: 36px; height: 36px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.3); border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.3);
   transform: translate(-50%,-50%);
   opacity: 0; transition: opacity .4s ease;
 }
 #cursor-dot.active, #cursor-ring.active { opacity: 1; }
+@media (pointer: coarse) {
+  #cursor-dot, #cursor-ring { display: none; }
+}
 
 /* ── BINARY CANVAS : fixed, masqué dès qu'on quitte le hero ── */
 #binary-canvas {
@@ -420,9 +425,18 @@ nav.visible { opacity: 1; }
   font-style: italic;
 }
 
+@media (pointer: coarse) {
+  .project-row { grid-template-columns: 1fr; gap: .8rem 0; }
+  .row-right { display: none; }
+  .row-desc {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
 @media (max-width: 600px) {
   .project-row { grid-template-columns: 1fr; }
   .row-right { display: none; }
+  .row-desc { opacity: 1 !important; transform: none !important; }
 }
 
 /* ── FOOTER ── */
@@ -621,17 +635,17 @@ const LINES = [
   { text: 'SYS.NODE  : heliosdigital.org', cls: 'dim' },
   { text: 'STATUS    : 200 OK',            cls: 'dim' },
   { text: '' },
-  { text: '$ init modules...', pause: 280 },
+  { text: '$ init modules...', pause: 120 },
   { text: '  [✓] network.interface       online' },
   { text: '  [✓] render.engine           loaded' },
   { text: '  [✓] portfolio.db            4 projects mounted' },
   { text: '  [✓] contact.api             :443' },
   { text: '' },
-  { text: '$ whoami', pause: 200 },
+  { text: '$ whoami', pause: 80 },
   { text: '  Julien Anstett — engineer & builder.' },
   { text: '  Web · Mobile · AI. Solo, by design.' },
   { text: '' },
-  { text: '$ ./launch.sh', pause: 380 },
+  { text: '$ ./launch.sh', pause: 140 },
   { text: '  Entering simulation ▌' },
 ];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -641,24 +655,24 @@ async function typeLine(text, cls='', pause=0) {
   const span = document.createElement('span');
   if (cls) span.className = cls;
   output.appendChild(span);
-  for (const ch of text) { span.textContent += ch; await sleep(16); }
+  for (const ch of text) { span.textContent += ch; await sleep(6); }
   output.appendChild(document.createTextNode('\n'));
-  await sleep(65);
+  await sleep(18);
 }
 
 async function runBoot() {
   document.documentElement.classList.add('booting');
   for (const l of LINES) await typeLine(l.text, l.cls||'', l.pause||0);
-  await sleep(500);
+  await sleep(200);
   termCur.style.display = 'none';
   terminal.classList.add('flicker');
   await sleep(150);
   bgEl.classList.add('visible');
-  await sleep(400);
+  await sleep(300);
   logoOv.classList.add('visible');
-  await sleep(1800);
+  await sleep(1200);
   logoOv.classList.add('fadeout');
-  await sleep(900);
+  await sleep(700);
   terminal.classList.add('hidden');
   bootOv.style.display = 'none';
   document.documentElement.classList.remove('booting');
@@ -676,17 +690,20 @@ async function runBoot() {
 }
 runBoot();
 
-/* ─── CURSOR ─── */
+/* ─── CURSOR (desktop uniquement) ─── */
+const isTouch = window.matchMedia('(pointer: coarse)').matches;
 let mx = window.innerWidth/2, my = window.innerHeight/2, rx = mx, ry = my;
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  dot.style.left = mx+'px'; dot.style.top = my+'px';
-});
-(function cursorLoop() {
-  rx += (mx-rx)*.1; ry += (my-ry)*.1;
-  ring.style.left = rx+'px'; ring.style.top = ry+'px';
-  requestAnimationFrame(cursorLoop);
-})();
+if (!isTouch) {
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx+'px'; dot.style.top = my+'px';
+  });
+  (function cursorLoop() {
+    rx += (mx-rx)*.1; ry += (my-ry)*.1;
+    ring.style.left = rx+'px'; ring.style.top = ry+'px';
+    requestAnimationFrame(cursorLoop);
+  })();
+}
 
 /* ─── BINARY CANVAS ─── */
 const FS = 9;
@@ -707,7 +724,7 @@ setInterval(() => {
 
 function draw() {
   ctx.clearRect(0, 0, cvs.width, cvs.height);
-  if (binaryActive && binaryVisible) {
+  if (binaryActive && binaryVisible && !isTouch) {
     ctx.font = `${FS}px 'Share Tech Mono',monospace`;
     ctx.textAlign = 'left';
     for (let r = 0; r < rows; r++) {
