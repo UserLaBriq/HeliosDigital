@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="html-root">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/x-icon" href="./assets/ico/favicon.ico" />
 <title>Julien Anstett — Helios Digital</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;700;800&family=Noto+Serif+JP:wght@400;600&display=swap');
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -19,19 +19,20 @@
   --pad:   clamp(1.5rem, 4vw, 3rem);
 }
 
-html, body {
-  background: var(--dark);
-  overscroll-behavior: none;
-}
+html, body { background: var(--dark); overscroll-behavior: none; }
 html.booting { overflow: hidden; }
 
-/* ── BOOT OVERLAY ── */
-#boot-overlay {
-  position: fixed; inset: 0; z-index: 100;
-  background: var(--bg);
+/* police japonaise pour le hero en mode JA */
+html[lang="ja"] .hero-text {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(.82rem, 1.1vw, 1.05rem);
+  line-height: 2;
 }
 
-/* ── FOND IMAGE : fixe, uniquement visible sous le hero ── */
+/* ── BOOT OVERLAY ── */
+#boot-overlay { position: fixed; inset: 0; z-index: 100; background: var(--bg); }
+
+/* ── BG IMAGE ── */
 #bg {
   position: fixed; inset: 0; z-index: 0;
   background: url('./assets/images/2xgrass.png') center top / cover no-repeat;
@@ -43,10 +44,8 @@ html.booting { overflow: hidden; }
   background: linear-gradient(160deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.22) 50%, rgba(0,0,0,.5) 100%);
 }
 
-/* ── CURSOR : desktop seulement ── */
-@media (pointer: fine) {
-  * { cursor: none !important; }
-}
+/* ── CURSOR desktop only ── */
+@media (pointer: fine) { * { cursor: none !important; } }
 #cursor-dot {
   position: fixed; z-index: 9999; pointer-events: none;
   width: 5px; height: 5px; border-radius: 50%;
@@ -56,20 +55,14 @@ html.booting { overflow: hidden; }
 #cursor-ring {
   position: fixed; z-index: 9998; pointer-events: none;
   width: 36px; height: 36px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.3);
-  transform: translate(-50%,-50%);
+  border: 1px solid rgba(255,255,255,.3); transform: translate(-50%,-50%);
   opacity: 0; transition: opacity .4s ease;
 }
 #cursor-dot.active, #cursor-ring.active { opacity: 1; }
-@media (pointer: coarse) {
-  #cursor-dot, #cursor-ring { display: none; }
-}
+@media (pointer: coarse) { #cursor-dot, #cursor-ring { display: none; } }
 
-/* ── BINARY CANVAS : fixed, masqué dès qu'on quitte le hero ── */
-#binary-canvas {
-  position: fixed; inset: 0; z-index: 1; pointer-events: none;
-  transition: opacity .6s ease;
-}
+/* ── BINARY CANVAS ── */
+#binary-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; transition: opacity .6s ease; }
 #binary-canvas.hidden { opacity: 0; }
 
 /* ── TERMINAL ── */
@@ -89,8 +82,7 @@ html.booting { overflow: hidden; }
 #term-cursor {
   display: inline-block; width: 9px; height: 1.1em;
   background: var(--green); vertical-align: text-bottom;
-  animation: blink .7s step-end infinite;
-  box-shadow: 0 0 6px var(--green);
+  animation: blink .7s step-end infinite; box-shadow: 0 0 6px var(--green);
 }
 @keyframes blink { 50% { opacity: 0; } }
 .dim { color: var(--dim); text-shadow: none; }
@@ -100,29 +92,23 @@ html.booting { overflow: hidden; }
 }
 #terminal.flicker { animation: flicker-out 1.2s ease forwards; }
 
-/* ── LOGO OVERLAY ── */
+/* ── LOGO ── */
 #logo-overlay {
   position: absolute; inset: 0; z-index: 102;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  pointer-events: none; opacity: 0;
-  transition: opacity 1.2s ease .3s;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none; opacity: 0; transition: opacity 1.2s ease .3s;
 }
 #logo-overlay.visible { opacity: 1; }
 #logo-overlay.fadeout { opacity: 0; transition: opacity 1.4s ease; }
 #logo-text {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(2.2rem, 6vw, 5.5rem);
+  font-family: 'Share Tech Mono', monospace; font-size: clamp(2.2rem, 6vw, 5.5rem);
   letter-spacing: .32em; color: #fff;
-  text-shadow: 0 0 50px rgba(0,255,157,.55), 0 2px 80px rgba(0,0,0,.9);
-  text-transform: uppercase;
+  text-shadow: 0 0 50px rgba(0,255,157,.55), 0 2px 80px rgba(0,0,0,.9); text-transform: uppercase;
 }
 #logo-sub {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(.65rem, 1.2vw, .95rem);
+  font-family: 'Share Tech Mono', monospace; font-size: clamp(.65rem, 1.2vw, .95rem);
   letter-spacing: .6em; color: var(--green);
-  text-shadow: 0 0 14px rgba(0,255,157,.5);
-  margin-top: .9rem; text-transform: uppercase;
+  text-shadow: 0 0 14px rgba(0,255,157,.5); margin-top: .9rem; text-transform: uppercase;
 }
 
 /* ── NAV ── */
@@ -138,7 +124,7 @@ nav.visible { opacity: 1; }
   font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
   color: var(--white); text-decoration: none; opacity: .9;
 }
-.nav-right { display: flex; align-items: center; gap: 2rem; }
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
 .nav-link {
   font-family: 'Syne', sans-serif; font-size: clamp(.7rem, 1vw, .88rem);
   font-weight: 400; letter-spacing: .14em; text-transform: uppercase;
@@ -152,6 +138,21 @@ nav.visible { opacity: 1; }
 }
 .nav-link:hover { opacity: 1; }
 .nav-link:hover::after { transform: scaleX(1); }
+
+/* lang switcher */
+.lang-switcher {
+  display: flex; align-items: center; gap: 2px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 999px; padding: 3px;
+}
+.lang-btn {
+  font-family: 'Syne', sans-serif; font-size: .58rem;
+  font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(255,255,255,.45); background: transparent; border: none;
+  padding: 3px 8px; border-radius: 999px;
+  transition: background .2s ease, color .2s ease;
+}
+.lang-btn.active { background: rgba(255,255,255,.15); color: var(--white); }
 
 /* ── BOTTOM BAR ── */
 #bottom-bar {
@@ -176,9 +177,7 @@ nav.visible { opacity: 1; }
 @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
 .scroll-line { width: 28px; height: 1px; background: var(--white); opacity: .4; }
 
-/* ════════════════════════════════
-   PAGE CONTENT — scroll natif
-   ════════════════════════════════ */
+/* ── PAGE CONTENT ── */
 #page-content { position: relative; z-index: 2; visibility: hidden; }
 #page-content.visible { visibility: visible; }
 
@@ -198,106 +197,70 @@ nav.visible { opacity: 1; }
 }
 .hero-line { display: block; overflow: hidden; line-height: 1.78; }
 .hero-line-inner {
-  display: block;
-  transform: translateY(110%); opacity: 0;
+  display: block; transform: translateY(110%); opacity: 0;
   transition: transform .7s cubic-bezier(.16,1,.3,1), opacity .5s ease;
 }
 .hero-line-inner.in { transform: translateY(0); opacity: 1; }
-/* ── EM : glitch flicker ── */
-.hero-text em {
-  font-style: italic; opacity: .82;
-  transition: opacity .2s ease;
-  position: relative;
-}
-.hero-text em:hover {
-  opacity: 1;
-  animation: glitch .5s steps(1) forwards;
-}
+
+/* em glitch */
+.hero-text em { font-style: italic; opacity: .82; transition: opacity .2s ease; position: relative; }
+.hero-text em:hover { opacity: 1; animation: glitch .5s steps(1) forwards; }
 @keyframes glitch {
-  0%   { text-shadow: 2px 0 rgba(0,255,157,.7), -2px 0 rgba(255,60,60,.6); transform: translateX(0); }
-  10%  { text-shadow: -3px 0 rgba(0,255,157,.7), 3px 0 rgba(255,60,60,.6); transform: translateX(2px); }
-  20%  { text-shadow: 3px 0 rgba(0,255,157,.7), -3px 0 rgba(255,60,60,.6); transform: translateX(-2px); }
-  30%  { text-shadow: -2px 0 rgba(0,255,157,.7), 2px 0 rgba(255,60,60,.6); transform: translateX(1px); }
-  40%  { text-shadow: none; transform: translateX(0); }
-  50%  { text-shadow: 2px 0 rgba(0,255,157,.5), -2px 0 rgba(255,60,60,.4); transform: translateX(-1px); }
-  60%  { text-shadow: none; transform: translateX(0); }
-  100% { text-shadow: none; transform: translateX(0); }
+  0%  { text-shadow: 2px 0 rgba(0,255,157,.7), -2px 0 rgba(255,60,60,.6); transform: translateX(0); }
+  10% { text-shadow: -3px 0 rgba(0,255,157,.7), 3px 0 rgba(255,60,60,.6); transform: translateX(2px); }
+  20% { text-shadow: 3px 0 rgba(0,255,157,.7), -3px 0 rgba(255,60,60,.6); transform: translateX(-2px); }
+  30% { text-shadow: -2px 0 rgba(0,255,157,.7), 2px 0 rgba(255,60,60,.6); transform: translateX(1px); }
+  40% { text-shadow: none; transform: translateX(0); }
+  50% { text-shadow: 2px 0 rgba(0,255,157,.5), -2px 0 rgba(255,60,60,.4); transform: translateX(-1px); }
+  60% { text-shadow: none; transform: translateX(0); }
+  100%{ text-shadow: none; transform: translateX(0); }
 }
 
-/* ── STRONG : base commune ── */
+/* strong base */
 .hero-text strong {
   font-family: 'Syne', sans-serif; font-weight: 700;
   font-size: .8em; letter-spacing: .1em;
   position: relative; display: inline-block;
 }
 
-/* ── FRANCE & LUXEMBOURG : reveal character par character (clip left→right) ── */
+/* s-location */
 .s-location {
-  transition: color .3s ease;
   background: linear-gradient(90deg, var(--green) 50%, var(--white) 50%);
-  background-size: 200% 100%;
-  background-position: 100% 0;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  transition: background-position .5s cubic-bezier(.16,1,.3,1);
+  background-size: 200% 100%; background-position: 100% 0;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; transition: background-position .5s cubic-bezier(.16,1,.3,1);
 }
 .s-location:hover { background-position: 0% 0; }
 
-/* ── COLLABORATE WITH AGENCIES : underline qui s'étire + skew léger ── */
-.s-collab {
-  transition: letter-spacing .4s cubic-bezier(.16,1,.3,1), transform .3s cubic-bezier(.16,1,.3,1), color .3s ease;
-}
+/* s-collab */
+.s-collab { transition: letter-spacing .4s cubic-bezier(.16,1,.3,1), transform .3s cubic-bezier(.16,1,.3,1), color .3s ease; }
 .s-collab::after {
-  content: '';
-  position: absolute; bottom: -1px; left: 0;
+  content: ''; position: absolute; bottom: -1px; left: 0;
   width: 0; height: 1px;
   background: linear-gradient(90deg, var(--green), transparent);
   transition: width .45s cubic-bezier(.16,1,.3,1);
 }
-.s-collab:hover {
-  letter-spacing: .16em;
-  transform: skewX(-4deg);
-  color: var(--white);
-}
+.s-collab:hover { letter-spacing: .16em; transform: skewX(-4deg); color: var(--white); }
 .s-collab:hover::after { width: 100%; }
 
-/* ── STARTUPS & FOUNDERS : flip vertical (rotateX) ── */
+/* s-founders */
 .s-founders {
-  transform-style: preserve-3d;
+  transform-style: preserve-3d; transform-origin: center bottom;
   transition: transform .5s cubic-bezier(.16,1,.3,1), color .3s ease, text-shadow .3s ease;
-  transform-origin: center bottom;
 }
-.s-founders:hover {
-  transform: rotateX(18deg) translateY(-3px);
-  color: var(--green);
-  text-shadow: 0 6px 18px rgba(0,255,157,.3);
-}
+.s-founders:hover { transform: rotateX(18deg) translateY(-3px); color: var(--green); text-shadow: 0 6px 18px rgba(0,255,157,.3); }
 
-/* ── AI, WEB & MOBILE : glitch data-text ── */
-.s-tech {
-  transition: color .2s ease;
-}
-.s-tech::before,
-.s-tech::after {
-  content: 'AI, WEB & MOBILE';
-  position: absolute; top: 0; left: 0;
-  width: 100%;
-  opacity: 0;
+/* s-tech glitch */
+.s-tech { transition: color .2s ease; }
+.s-tech::before, .s-tech::after {
+  content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; opacity: 0;
   font-family: 'Share Tech Mono', monospace;
 }
 .s-tech::before { color: #ff3c3c; }
 .s-tech::after  { color: #3cffee; }
-
 .s-tech:hover { color: var(--white); }
-.s-tech:hover::before {
-  opacity: .7;
-  animation: glitch-r .4s steps(1) infinite;
-}
-.s-tech:hover::after {
-  opacity: .7;
-  animation: glitch-l .4s steps(1) infinite .05s;
-}
+.s-tech:hover::before { opacity: .7; animation: glitch-r .4s steps(1) infinite; }
+.s-tech:hover::after  { opacity: .7; animation: glitch-l .4s steps(1) infinite .05s; }
 @keyframes glitch-r {
   0%  { clip-path: inset(20% 0 60% 0); transform: translateX(3px); }
   25% { clip-path: inset(55% 0 10% 0); transform: translateX(-2px); }
@@ -313,125 +276,62 @@ nav.visible { opacity: 1; }
   100%{ clip-path: inset(40% 0 30% 0); transform: translateX(-1px); }
 }
 
-/* ── TRANSITION hero → works ── */
+/* ── WORKS ── */
 #section-works {
-  position: relative;
-  background: #f0ede6;
-  min-height: 100vh;
+  position: relative; background: #f0ede6; min-height: 100vh;
   padding: clamp(5rem, 10vh, 8rem) var(--pad) clamp(4rem, 8vh, 6rem);
   box-shadow: inset 0 12px 32px rgba(0,0,0,.18);
 }
-
-#section-works::before { display: none; }
-
 .works-header {
   font-family: 'Syne', sans-serif; font-size: clamp(.6rem, .8vw, .7rem);
   font-weight: 700; letter-spacing: .32em; text-transform: uppercase;
   color: #8a8478; margin-bottom: clamp(3rem, 6vh, 5rem);
 }
-
-/* ── LISTE PROJETS ── */
 .works-list { display: flex; flex-direction: column; }
-
 .project-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: end;
-  gap: 0 3rem;
-  padding: 2.2rem 0;
+  display: grid; grid-template-columns: 1fr auto; align-items: end;
+  gap: 0 3rem; padding: 2.2rem 0;
   border-top: 1px solid rgba(0,0,0,.1);
-  text-decoration: none;
-  position: relative;
+  text-decoration: none; position: relative;
   transition: padding-left .45s cubic-bezier(.16,1,.3,1);
 }
 .project-row:last-child { border-bottom: 1px solid rgba(0,0,0,.1); }
-
-/* trait fin qui slide */
 .project-row::after {
-  content: '';
-  position: absolute; bottom: -1px; left: 0;
-  width: 0; height: 1px;
-  background: #1a1a1a;
+  content: ''; position: absolute; bottom: -1px; left: 0;
+  width: 0; height: 1px; background: #1a1a1a;
   transition: width .5s cubic-bezier(.16,1,.3,1);
 }
 .project-row:hover::after { width: 100%; }
 .project-row:hover { padding-left: .6rem; }
-
-/* gauche */
 .row-main { min-width: 0; }
-
-.row-head {
-  display: flex; align-items: baseline; gap: 1.2rem;
-  margin-bottom: .5rem; flex-wrap: wrap;
-}
-
+.row-head { display: flex; align-items: baseline; gap: 1.2rem; margin-bottom: .5rem; flex-wrap: wrap; }
 .row-title {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(1.6rem, 3.2vw, 2.8rem);
+  font-family: 'DM Serif Display', serif; font-size: clamp(1.6rem, 3.2vw, 2.8rem);
   color: #1a1a18; font-weight: 400; line-height: 1;
   transition: letter-spacing .45s cubic-bezier(.16,1,.3,1);
 }
 .project-row:hover .row-title { letter-spacing: .02em; }
-
-.row-tag {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(.58rem, .72vw, .65rem);
-  letter-spacing: .08em;
-  color: #9a9488; font-weight: 400;
-}
-
+.row-tag { font-family: 'Syne', sans-serif; font-size: clamp(.58rem, .72vw, .65rem); letter-spacing: .08em; color: #9a9488; font-weight: 400; }
 .row-desc {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(.65rem, .85vw, .76rem);
-  color: #6b6860; line-height: 1.6;
-  max-width: 520px;
+  font-family: 'Syne', sans-serif; font-size: clamp(.65rem, .85vw, .76rem);
+  color: #6b6860; line-height: 1.6; max-width: 520px;
   opacity: 0; transform: translateY(4px);
   transition: opacity .35s ease, transform .35s ease;
 }
 .project-row:hover .row-desc { opacity: 1; transform: translateY(0); }
-
-/* droite */
-.row-right {
-  display: flex; flex-direction: column;
-  align-items: flex-end; gap: .5rem;
-  flex-shrink: 0; padding-bottom: .15rem;
-}
-
-.row-stack {
-  display: flex; gap: .5rem; flex-wrap: wrap; justify-content: flex-end;
-}
-.chip {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(.56rem, .68vw, .62rem);
-  letter-spacing: .04em;
-  color: #9a9488;
-  transition: color .3s ease;
-}
+.row-right { display: flex; flex-direction: column; align-items: flex-end; gap: .5rem; flex-shrink: 0; padding-bottom: .15rem; }
+.row-stack { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: flex-end; }
+.chip { font-family: 'Syne', sans-serif; font-size: clamp(.56rem, .68vw, .62rem); letter-spacing: .04em; color: #9a9488; transition: color .3s ease; }
 .chip + .chip::before { content: '·'; margin-right: .5rem; color: #c5c0b6; }
 .project-row:hover .chip { color: #4a4840; }
-
-.row-arrow {
-  font-size: 1rem; color: #1a1a18; opacity: 0;
-  transform: translate(-6px, 6px);
-  transition: opacity .3s ease, transform .4s cubic-bezier(.16,1,.3,1);
-}
-.project-row:hover .row-arrow { opacity: .7; transform: translate(0, 0); }
-
-.row-wip {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(.56rem, .68vw, .62rem);
-  letter-spacing: .08em;
-  color: #b0aa9e;
-  font-style: italic;
-}
+.row-arrow { font-size: 1rem; color: #1a1a18; opacity: 0; transform: translate(-6px, 6px); transition: opacity .3s ease, transform .4s cubic-bezier(.16,1,.3,1); }
+.project-row:hover .row-arrow { opacity: .7; transform: translate(0,0); }
+.row-wip { font-family: 'Syne', sans-serif; font-size: clamp(.56rem, .68vw, .62rem); letter-spacing: .08em; color: #b0aa9e; font-style: italic; }
 
 @media (pointer: coarse) {
   .project-row { grid-template-columns: 1fr; gap: .8rem 0; }
   .row-right { display: none; }
-  .row-desc {
-    opacity: 1 !important;
-    transform: none !important;
-  }
+  .row-desc { opacity: 1 !important; transform: none !important; }
 }
 @media (max-width: 600px) {
   .project-row { grid-template-columns: 1fr; }
@@ -441,29 +341,14 @@ nav.visible { opacity: 1; }
 
 /* ── FOOTER ── */
 #section-footer {
-  background: #e8e4dc;
-  padding: clamp(3.5rem, 7vh, 6rem) var(--pad) clamp(2.5rem, 5vh, 4rem);
+  background: #e8e4dc; padding: clamp(3.5rem, 7vh, 6rem) var(--pad) clamp(2.5rem, 5vh, 4rem);
   display: flex; flex-direction: column; align-items: center; gap: 1rem;
   border-top: 1px solid rgba(0,0,0,.08);
 }
-.footer-cta {
-  font-family: 'DM Serif Display', serif;
-  font-size: clamp(1.5rem, 3.2vw, 2.4rem);
-  color: #1a1a18; text-align: center; font-weight: 400; line-height: 1.3;
-}
-.footer-email {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(.7rem, 1vw, .88rem);
-  letter-spacing: .14em; text-transform: uppercase;
-  color: #6b6860; text-decoration: none;
-  transition: color .25s ease;
-}
+.footer-cta { font-family: 'DM Serif Display', serif; font-size: clamp(1.5rem, 3.2vw, 2.4rem); color: #1a1a18; text-align: center; font-weight: 400; line-height: 1.3; }
+.footer-email { font-family: 'Syne', sans-serif; font-size: clamp(.7rem, 1vw, .88rem); letter-spacing: .14em; text-transform: uppercase; color: #6b6860; text-decoration: none; transition: color .25s ease; }
 .footer-email:hover { color: #1a1a18; }
-.footer-copy {
-  font-family: 'Syne', sans-serif;
-  font-size: .6rem; letter-spacing: .1em; text-transform: uppercase;
-  color: #b0aa9e; margin-top: 1.5rem;
-}
+.footer-copy { font-family: 'Syne', sans-serif; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: #b0aa9e; margin-top: 1.5rem; }
 </style>
 </head>
 <body>
@@ -482,53 +367,55 @@ nav.visible { opacity: 1; }
   </div>
 </div>
 
-<!-- Fixed UI -->
+<!-- Nav -->
 <nav id="main-nav">
   <a class="nav-name" href="#">Helios Digital</a>
   <div class="nav-right">
-    <a class="nav-link" href="#section-works">Work</a>
-    <a class="nav-link" href="mailto:anstettjulien@gmail.com">Contact</a>
+    <a class="nav-link" href="#section-works" id="nav-work">Work</a>
+    <a class="nav-link" href="mailto:anstettjulien@gmail.com" id="nav-contact">Contact</a>
+    <div class="lang-switcher">
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-fr" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" id="btn-ja" onclick="setLang('ja')">日本語</button>
+    </div>
   </div>
 </nav>
 <div id="bottom-bar">
   <span class="bottom-name">Julien Anstett</span>
-  <span class="scroll-hint"><span class="scroll-line"></span> Scroll</span>
+  <span class="scroll-hint" id="scroll-hint-text"><span class="scroll-line"></span> Scroll</span>
 </div>
 
-<!-- Page content — scroll natif -->
+<!-- Page content -->
 <div id="page-content">
 
   <section id="section-hero">
-    <p class="hero-text">
-      <span class="hero-line"><span class="hero-line-inner">Hey there,</span></span>
+    <p class="hero-text" id="hero-text-block">
+      <span class="hero-line"><span class="hero-line-inner" id="h0"></span></span>
       <span class="hero-line"><span class="hero-line-inner">&nbsp;</span></span>
-      <span class="hero-line"><span class="hero-line-inner">I am a <em>freelance engineer & developer</em></span></span>
-      <span class="hero-line"><span class="hero-line-inner">based between <strong class="s-location">FRANCE & LUXEMBOURG</strong>.</span></span>
-      <span class="hero-line"><span class="hero-line-inner">I <strong class="s-collab">COLLABORATE WITH AGENCIES,</strong></span></span>
-      <span class="hero-line"><span class="hero-line-inner"><strong class="s-founders">STARTUPS & FOUNDERS</strong> to build</span></span>
-      <span class="hero-line"><span class="hero-line-inner">modern and reliable products, with</span></span>
-      <span class="hero-line"><span class="hero-line-inner">a special attention to <strong class="s-tech">AI, WEB & MOBILE</strong></span></span>
-      <span class="hero-line"><span class="hero-line-inner">— and to things that actually <em>work</em>.</span></span>
+      <span class="hero-line"><span class="hero-line-inner" id="h2"></span></span>
+      <span class="hero-line"><span class="hero-line-inner" id="h3"></span></span>
+      <span class="hero-line"><span class="hero-line-inner" id="h4"></span></span>
+      <span class="hero-line"><span class="hero-line-inner" id="h5"></span></span>
+      <span class="hero-line"><span class="hero-line-inner" id="h6"></span></span>
+      <span class="hero-line"><span class="hero-line-inner" id="h7"></span></span>
+      <span class="hero-line"><span class="hero-line-inner" id="h8"></span></span>
     </p>
   </section>
 
   <section id="section-works">
-    <p class="works-header">Selected work</p>
+    <p class="works-header" id="works-header-label">Selected work</p>
     <div class="works-list">
 
       <a class="project-row" href="https://apps.apple.com/it/app/ciboai/id6757018806" target="_blank">
         <div class="row-main">
           <div class="row-head">
             <span class="row-title">CiboAI</span>
-            <span class="row-tag">iOS App · 2025</span>
+            <span class="row-tag" id="tag-cibo">iOS App · 2025</span>
           </div>
-          <p class="row-desc">AI-powered recipe finder. Built solo and shipped to the App Store in ~10 days.</p>
+          <p class="row-desc" id="desc-cibo">AI-powered recipe finder. Built solo and shipped to the App Store in ~10 days.</p>
         </div>
         <div class="row-right">
-          <div class="row-stack">
-            <span class="chip">Expo</span><span class="chip">SwiftUI</span>
-            <span class="chip">GPT-4o</span><span class="chip">App Store</span>
-          </div>
+          <div class="row-stack"><span class="chip">Expo</span><span class="chip">SwiftUI</span><span class="chip">GPT-4o</span><span class="chip">App Store</span></div>
           <span class="row-arrow">↗</span>
         </div>
       </a>
@@ -537,15 +424,12 @@ nav.visible { opacity: 1; }
         <div class="row-main">
           <div class="row-head">
             <span class="row-title">QR Avocat</span>
-            <span class="row-tag">Web · Live</span>
+            <span class="row-tag" id="tag-qr">Web · Live</span>
           </div>
-          <p class="row-desc">Website for Paris Bar attorney Quentin Rapaud — glassmorphism, custom animations, legal pages.</p>
+          <p class="row-desc" id="desc-qr">Website for Paris Bar attorney Quentin Rapaud — glassmorphism, custom animations, legal pages.</p>
         </div>
         <div class="row-right">
-          <div class="row-stack">
-            <span class="chip">HTML</span><span class="chip">Tailwind</span>
-            <span class="chip">JS</span><span class="chip">OVH</span>
-          </div>
+          <div class="row-stack"><span class="chip">HTML</span><span class="chip">Tailwind</span><span class="chip">JS</span><span class="chip">OVH</span></div>
           <span class="row-arrow">↗</span>
         </div>
       </a>
@@ -554,16 +438,13 @@ nav.visible { opacity: 1; }
         <div class="row-main">
           <div class="row-head">
             <span class="row-title">AutoReckon</span>
-            <span class="row-tag">Computer Vision · 2024</span>
+            <span class="row-tag" id="tag-auto">Computer Vision · 2024</span>
           </div>
-          <p class="row-desc">3-stage CV pipeline — vehicle detection, license plate OCR & model classification. 2.2ms inference.</p>
+          <p class="row-desc" id="desc-auto">3-stage CV pipeline — vehicle detection, license plate OCR & model classification. 2.2ms inference.</p>
         </div>
         <div class="row-right">
-          <div class="row-stack">
-            <span class="chip">PyTorch</span><span class="chip">YOLOv5</span>
-            <span class="chip">ResNet50</span><span class="chip">VGG16</span>
-          </div>
-          <span class="row-wip">In progress</span>
+          <div class="row-stack"><span class="chip">PyTorch</span><span class="chip">YOLOv5</span><span class="chip">ResNet50</span><span class="chip">VGG16</span></div>
+          <span class="row-wip" id="wip-auto">In progress</span>
         </div>
       </a>
 
@@ -571,16 +452,13 @@ nav.visible { opacity: 1; }
         <div class="row-main">
           <div class="row-head">
             <span class="row-title">FPV Long Range</span>
-            <span class="row-tag">Hardware · Fabrication</span>
+            <span class="row-tag" id="tag-fpv">Hardware · Fabrication</span>
           </div>
-          <p class="row-desc">Full drone build from scratch — CAD frame, 3D-printed parts, electronics wiring & Betaflight tuning.</p>
+          <p class="row-desc" id="desc-fpv">Full drone build from scratch — CAD frame, 3D-printed parts, electronics wiring & Betaflight tuning.</p>
         </div>
         <div class="row-right">
-          <div class="row-stack">
-            <span class="chip">3D Print</span><span class="chip">Betaflight</span>
-            <span class="chip">ExpressLRS</span><span class="chip">CAD</span>
-          </div>
-          <span class="row-wip">Build log</span>
+          <div class="row-stack"><span class="chip">3D Print</span><span class="chip">Betaflight</span><span class="chip">ExpressLRS</span><span class="chip">CAD</span></div>
+          <span class="row-wip" id="wip-fpv">Build log</span>
         </div>
       </a>
 
@@ -588,14 +466,226 @@ nav.visible { opacity: 1; }
   </section>
 
   <footer id="section-footer">
-    <p class="footer-cta">Got a project?<br>Let's build it.</p>
+    <p class="footer-cta" id="footer-cta">Got a project?<br>Let's build it.</p>
     <a class="footer-email" href="mailto:anstettjulien@gmail.com">anstettjulien@gmail.com</a>
-    <p class="footer-copy">© 2026 Helios Digital — Julien Anstett</p>
+    <p class="footer-copy" id="footer-copy">© 2026 Helios Digital — Julien Anstett</p>
   </footer>
 
 </div>
 
 <script>
+/* ══════════════════════════════════════
+   TRADUCTIONS
+══════════════════════════════════════ */
+const TRANSLATIONS = {
+  en: {
+    htmlLang: 'en',
+    title: 'Julien Anstett — Helios Digital',
+    navWork: 'Work',
+    navContact: 'Contact',
+    scrollHint: 'Scroll',
+    h0: 'Hey there,',
+    h2: 'I am a freelance engineer & developer',
+    h2em: true, // contient un <em>
+    h3loc: 'FRANCE & LUXEMBOURG',
+    h3pre: 'based between ',
+    h3post: '.',
+    h4pre: 'I ',
+    h4collab: 'COLLABORATE WITH AGENCIES,',
+    h5founders: 'STARTUPS & FOUNDERS',
+    h5post: ' to build',
+    h6: 'modern and reliable products, with',
+    h7pre: 'a special attention to ',
+    h7tech: 'AI, WEB & MOBILE',
+    h8: '— and to things that actually work.',
+    h8em: true,
+    worksHeader: 'Selected work',
+    tagCibo: 'iOS App · 2025',
+    descCibo: 'AI-powered recipe finder. Built solo and shipped to the App Store in ~10 days.',
+    tagQr: 'Web · Live',
+    descQr: 'Website for Paris Bar attorney Quentin Rapaud — glassmorphism, custom animations, legal pages.',
+    tagAuto: 'Computer Vision · 2024',
+    descAuto: '3-stage CV pipeline — vehicle detection, license plate OCR & model classification. 2.2ms inference.',
+    wipAuto: 'In progress',
+    tagFpv: 'Hardware · Fabrication',
+    descFpv: 'Full drone build from scratch — CAD frame, 3D-printed parts, electronics wiring & Betaflight tuning.',
+    wipFpv: 'Build log',
+    footerCta: 'Got a project?<br>Let\'s build it.',
+    footerCopy: '© 2026 Helios Digital — Julien Anstett',
+  },
+  fr: {
+    htmlLang: 'fr',
+    title: 'Julien Anstett — Helios Digital',
+    navWork: 'Projets',
+    navContact: 'Contact',
+    scrollHint: 'Défiler',
+    h0: 'Bonjour,',
+    h2: 'Je suis ingénieur & développeur freelance',
+    h2em: true,
+    h3loc: 'FRANCE & LUXEMBOURG',
+    h3pre: 'basé entre la ',
+    h3post: '.',
+    h4pre: 'Je ',
+    h4collab: 'COLLABORE AVEC DES AGENCES,',
+    h5founders: 'STARTUPS & FONDATEURS',
+    h5post: ' pour créer',
+    h6: 'des produits modernes et fiables, avec',
+    h7pre: 'une attention particulière à ',
+    h7tech: "L'IA, WEB & MOBILE",
+    h8: '— et aux choses qui fonctionnent vraiment.',
+    h8em: true,
+    worksHeader: 'Projets sélectionnés',
+    tagCibo: 'App iOS · 2025',
+    descCibo: 'Outil de recettes alimenté par l\'IA. Conçu seul et publié sur l\'App Store en ~10 jours.',
+    tagQr: 'Web · En ligne',
+    descQr: 'Site vitrine pour l\'avocat Quentin Rapaud — glassmorphism, animations personnalisées, pages légales.',
+    tagAuto: 'Vision par ordinateur · 2024',
+    descAuto: 'Pipeline CV en 3 étapes — détection de véhicules, OCR de plaques & classification. Inférence 2.2ms.',
+    wipAuto: 'En cours',
+    tagFpv: 'Matériel · Fabrication',
+    descFpv: 'Drone construit from scratch — châssis CAD, pièces imprimées 3D, câblage électronique & réglage Betaflight.',
+    wipFpv: 'Journal de build',
+    footerCta: 'Un projet en tête ?<br>Construisons-le.',
+    footerCopy: '© 2026 Helios Digital — Julien Anstett',
+  },
+  ja: {
+    htmlLang: 'ja',
+    title: 'ジュリアン・アンステット — Helios Digital',
+    navWork: '作品',
+    navContact: 'お問い合わせ',
+    scrollHint: 'スクロール',
+    h0: 'はじめまして。',
+    h2: 'フリーランスのエンジニア＆開発者',
+    h2em: true,
+    h3loc: 'フランス・ルクセンブルク',
+    h3pre: '拠点：',
+    h3post: '。',
+    h4pre: '',
+    h4collab: 'エージェンシー、',
+    h5founders: 'スタートアップ、創業者',
+    h5post: 'と協力し、',
+    h6: '信頼性の高い現代的なプロダクトを',
+    h7pre: '構築。専門領域は',
+    h7tech: 'AI・Web・モバイル',
+    h8: '— 実際に動くものにこだわります。',
+    h8em: true,
+    worksHeader: '制作実績',
+    tagCibo: 'iOSアプリ · 2025',
+    descCibo: 'AIレシピ発見アプリ。一人で開発し、約10日でApp Storeに公開。',
+    tagQr: 'Web · 公開中',
+    descQr: 'パリ弁護士会所属・Quentin Rapaud弁護士のサイト — グラスモーフィズム、カスタムアニメーション。',
+    tagAuto: 'コンピュータビジョン · 2024',
+    descAuto: '3段階CVパイプライン — 車両検出、ナンバープレートOCR＆車種分類。推論時間2.2ms。',
+    wipAuto: '開発中',
+    tagFpv: 'ハードウェア · 製作',
+    descFpv: 'ゼロからのドローン製作 — CADフレーム、3Dプリントパーツ、電装配線＆Betaflightチューニング。',
+    wipFpv: '製作ログ',
+    footerCta: 'プロジェクトがありますか？<br>一緒に作りましょう。',
+    footerCopy: '© 2026 Helios Digital — Julien Anstett',
+  }
+};
+
+/* ══════════════════════════════════════
+   APPLY LANGUAGE
+══════════════════════════════════════ */
+let currentLang = 'en';
+
+function buildHeroHTML(t) {
+  // Reconstruit les lignes hero avec les bons éléments interactifs
+  const emClass = currentLang === 'ja' ? '' : ' style="font-style:italic;opacity:.82;transition:opacity .2s ease;position:relative;"';
+
+  const lines = [
+    t.h0,
+    '&nbsp;',
+    currentLang === 'ja'
+      ? `<em${emClass}>${t.h2}</em>です。`
+      : `I am a <em${emClass}>${currentLang === 'fr' ? 'ingénieur & développeur freelance' : 'freelance engineer & developer'}</em>`,
+    `${t.h3pre}<strong class="s-location">${t.h3loc}</strong>${t.h3post}`,
+    `${t.h4pre}<strong class="s-collab">${t.h4collab}</strong>`,
+    `<strong class="s-founders">${t.h5founders}</strong>${t.h5post}`,
+    t.h6,
+    `${t.h7pre}<strong class="s-tech" data-text="${t.h7tech}">${t.h7tech}</strong>`,
+    currentLang === 'ja'
+      ? `— <em${emClass}>本当に動くもの</em>を大切に。`
+      : currentLang === 'fr'
+        ? `— et aux choses qui fonctionnent <em${emClass}>vraiment</em>.`
+        : `— and to things that actually <em${emClass}>work</em>.`,
+  ];
+  return lines;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = TRANSLATIONS[lang];
+
+  // html lang
+  document.getElementById('html-root').lang = t.htmlLang;
+  document.title = t.title;
+
+  // nav
+  document.getElementById('nav-work').textContent    = t.navWork;
+  document.getElementById('nav-contact').textContent = t.navContact;
+
+  // scroll hint
+  const sh = document.getElementById('scroll-hint-text');
+  sh.innerHTML = `<span class="scroll-line"></span> ${t.scrollHint}`;
+
+  // hero lines
+  const ids = ['h0',null,'h2','h3','h4','h5','h6','h7','h8'];
+  const lines = buildHeroHTML(t);
+  lines.forEach((html, i) => {
+    const el = document.getElementById('h' + i);
+    if (el) {
+      el.innerHTML = html;
+      // re-attach em animation class
+      el.querySelectorAll('em').forEach(em => {
+        em.classList.add('hero-em');
+      });
+    }
+  });
+
+  // works section
+  document.getElementById('works-header-label').textContent = t.worksHeader;
+  document.getElementById('tag-cibo').textContent  = t.tagCibo;
+  document.getElementById('desc-cibo').textContent = t.descCibo;
+  document.getElementById('tag-qr').textContent    = t.tagQr;
+  document.getElementById('desc-qr').textContent   = t.descQr;
+  document.getElementById('tag-auto').textContent  = t.tagAuto;
+  document.getElementById('desc-auto').textContent = t.descAuto;
+  document.getElementById('wip-auto').textContent  = t.wipAuto;
+  document.getElementById('tag-fpv').textContent   = t.tagFpv;
+  document.getElementById('desc-fpv').textContent  = t.descFpv;
+  document.getElementById('wip-fpv').textContent   = t.wipFpv;
+
+  // footer
+  document.getElementById('footer-cta').innerHTML  = t.footerCta;
+  document.getElementById('footer-copy').textContent = t.footerCopy;
+
+  // lang buttons
+  ['en','fr','ja'].forEach(l => {
+    document.getElementById('btn-' + l).classList.toggle('active', l === lang);
+  });
+}
+
+/* ══════════════════════════════════════
+   DETECT LANGUAGE
+══════════════════════════════════════ */
+function detectLang() {
+  // navigator.languages = tableau des langues préférées du navigateur, par ordre
+  // ex: ['ja', 'ja-JP', 'en-US'] sur un iPhone japonais
+  const langs = navigator.languages || [navigator.language || 'en'];
+  for (const l of langs) {
+    const code = l.toLowerCase();
+    if (code.startsWith('ja')) return 'ja';
+    if (code.startsWith('fr')) return 'fr';
+    if (code.startsWith('en')) return 'en';
+  }
+  return 'en'; // fallback
+}
+
+/* ══════════════════════════════════════
+   ÉLÉMENTS DOM
+══════════════════════════════════════ */
 const output      = document.getElementById('output');
 const termCur     = document.getElementById('term-cursor');
 const terminal    = document.getElementById('terminal');
@@ -611,13 +701,10 @@ const cvs         = document.getElementById('binary-canvas');
 const ctx         = cvs.getContext('2d');
 const heroSection = document.getElementById('section-hero');
 
-/* ─── BINARY : visible uniquement sur le hero ─── */
-let binaryActive  = false;
-let binaryVisible = true;
-
+/* ── Binary visibility ── */
+let binaryActive = false, binaryVisible = true;
 function updateBinaryVisibility() {
   const heroBottom = heroSection.getBoundingClientRect().bottom;
-  // fade out dès qu'on commence à quitter le hero
   if (heroBottom < window.innerHeight * 0.2) {
     if (binaryVisible) { cvs.classList.add('hidden'); binaryVisible = false; }
   } else {
@@ -626,7 +713,7 @@ function updateBinaryVisibility() {
 }
 window.addEventListener('scroll', updateBinaryVisibility, { passive: true });
 
-/* ─── BOOT SEQUENCE ─── */
+/* ── Boot ── */
 const LINES = [
   { text: 'HELIOS_OS v2.6.0 // BOOT SEQUENCE INITIATED' },
   { text: '' },
@@ -662,6 +749,11 @@ async function typeLine(text, cls='', pause=0) {
 
 async function runBoot() {
   document.documentElement.classList.add('booting');
+
+  // Détecte et applique la langue AVANT l'affichage du contenu
+  const detectedLang = detectLang();
+  setLang(detectedLang);
+
   for (const l of LINES) await typeLine(l.text, l.cls||'', l.pause||0);
   await sleep(200);
   termCur.style.display = 'none';
@@ -690,7 +782,7 @@ async function runBoot() {
 }
 runBoot();
 
-/* ─── CURSOR (desktop uniquement) ─── */
+/* ── Cursor ── */
 const isTouch = window.matchMedia('(pointer: coarse)').matches;
 let mx = window.innerWidth/2, my = window.innerHeight/2, rx = mx, ry = my;
 if (!isTouch) {
@@ -705,36 +797,30 @@ if (!isTouch) {
   })();
 }
 
-/* ─── BINARY CANVAS ─── */
+/* ── Binary canvas ── */
 const FS = 9;
 let cols, rows, grid = [];
 function resize() {
   cvs.width = innerWidth; cvs.height = innerHeight;
   cols = Math.ceil(cvs.width/FS); rows = Math.ceil(cvs.height/FS);
-  grid = Array.from({length:rows}, () =>
-    Array.from({length:cols}, () => Math.random() > .5 ? '1' : '0'));
+  grid = Array.from({length:rows}, () => Array.from({length:cols}, () => Math.random()>.5?'1':'0'));
 }
 resize();
 addEventListener('resize', resize);
 setInterval(() => {
-  if (!rows || !cols) return;
-  grid[Math.floor(Math.random()*rows)][Math.floor(Math.random()*cols)] =
-    Math.random() > .5 ? '1' : '0';
+  if (!rows||!cols) return;
+  grid[Math.floor(Math.random()*rows)][Math.floor(Math.random()*cols)] = Math.random()>.5?'1':'0';
 }, 40);
 
 function draw() {
-  ctx.clearRect(0, 0, cvs.width, cvs.height);
+  ctx.clearRect(0,0,cvs.width,cvs.height);
   if (binaryActive && binaryVisible && !isTouch) {
-    ctx.font = `${FS}px 'Share Tech Mono',monospace`;
-    ctx.textAlign = 'left';
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const x = c*FS, y = r*FS+FS;
-        const d = Math.hypot(x - mx, y - my);
-        if (d > 90) continue;
-        ctx.fillStyle = `rgba(0,255,157,${(1 - d/90) * .2})`;
-        ctx.fillText(grid[r][c], x, y);
-      }
+    ctx.font = `${FS}px 'Share Tech Mono',monospace`; ctx.textAlign='left';
+    for (let r=0;r<rows;r++) for (let c=0;c<cols;c++) {
+      const x=c*FS, y=r*FS+FS, d=Math.hypot(x-mx,y-my);
+      if (d>90) continue;
+      ctx.fillStyle=`rgba(0,255,157,${(1-d/90)*.2})`;
+      ctx.fillText(grid[r][c],x,y);
     }
   }
   requestAnimationFrame(draw);
