@@ -402,6 +402,12 @@ nav.visible { opacity: 1; }
 .preview-fpv {
     background: url('./assets/images/drone.png') center top / cover no-repeat;
 }
+.preview-gh23 {
+  background: url('./assets/images/GH23-evolution.png') center top / cover no-repeat;
+}
+.preview-pierres {
+  background: url('./assets/images/pierres.png') center top / cover no-repeat;
+}
 
 /* labels dans les previews */
 .preview-inner {
@@ -546,6 +552,34 @@ nav.visible { opacity: 1; }
         </div>
       </a>
 
+      <a class="project-row" data-preview="gh23" href="https://gh23-evolution.com/" target="_blank">
+        <div class="row-main">
+          <div class="row-head">
+            <span class="row-title">GH23 Evolution</span>
+            <span class="row-tag" id="tag-gh23">Web · Live</span>
+          </div>
+          <p class="row-desc" id="desc-gh23">Landing page for sports coach Guéric Henry — science-based coaching, Google reviews integration, waitlist.</p>
+        </div>
+        <div class="row-right">
+          <div class="row-stack"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JS</span><span class="chip">GitHub Pages</span></div>
+          <span class="row-arrow">↗</span>
+        </div>
+      </a>
+
+      <a class="project-row" data-preview="pierres" href="./pierres/" target="_blank">
+        <div class="row-main">
+          <div class="row-head">
+            <span class="row-title">ELIORAONE — Pierres fines</span>
+            <span class="row-tag" id="tag-pierres">Web · Live</span>
+          </div>
+          <p class="row-desc" id="desc-pierres">Fine gemstone showcase — sapphires, spinels & garnets sourced from Sri Lanka and India. Bilingual, animated gem renderer.</p>
+        </div>
+        <div class="row-right">
+          <div class="row-stack"><span class="chip">HTML</span><span class="chip">Canvas API</span><span class="chip">JS</span></div>
+          <span class="row-arrow">↗</span>
+        </div>
+      </a>
+
     </div>
   </section>
 
@@ -599,6 +633,10 @@ const TRANSLATIONS = {
     tagFpv: 'Hardware · Fabrication',
     descFpv: 'Full drone build from scratch — CAD frame, 3D-printed parts, electronics wiring & Betaflight tuning.',
     wipFpv: 'Build log',
+    tagGh23: 'Web · Live',
+    descGh23: 'Landing page for sports coach Guéric Henry — science-based coaching, Google reviews integration, waitlist.',
+    tagPierres: 'Web · Live',
+    descPierres: 'Fine gemstone showcase — sapphires, spinels & garnets sourced from Sri Lanka and India. Bilingual, animated gem renderer.',
     footerCta: 'Got a project?<br>Let\'s build it.',
     footerCopy: '© 2026 ELIORAONE — Julien Anstett',
   },
@@ -638,6 +676,10 @@ const TRANSLATIONS = {
     tagFpv: 'Matériel · Fabrication',
     descFpv: 'Drone construit from scratch — châssis CAD, pièces imprimées 3D, câblage électronique & réglage Betaflight.',
     wipFpv: 'Journal de build',
+    tagGh23: 'Web · En ligne',
+    descGh23: "Landing page pour le coach sportif Guéric Henry — coaching scientifique, intégration avis Google, liste d'attente.",
+    tagPierres: 'Web · En ligne',
+    descPierres: 'Vitrine de pierres fines — saphirs, spinelles & grenats sourcés au Sri Lanka et en Inde. Bilingue, rendu de gemmes animé.',
     footerCta: 'Un projet en tête ?<br>Construisons-le.',
     footerCopy: '© 2026 ELIORAONE — Julien Anstett',
   },
@@ -677,6 +719,10 @@ const TRANSLATIONS = {
     tagFpv: 'ハードウェア · 製作',
     descFpv: 'ゼロからのドローン製作 — CADフレーム、3Dプリントパーツ、電装配線＆Betaflightチューニング。',
     wipFpv: '製作ログ',
+    tagGh23: 'Web · 公開中',
+    descGh23: 'スポーツコーチ Guéric Henry のランディングページ — 科学的コーチング、Googleレビュー統合、ウェイトリスト。',
+    tagPierres: 'Web · 公開中',
+    descPierres: '宝石のショーケース — スリランカとインド産のサファイア、スピネル、ガーネット。バイリンガル、アニメーション宝石レンダラー。',
     footerCta: 'プロジェクトがありますか？<br>一緒に作りましょう。',
     footerCopy: '© 2026 ELIORAONE — Julien Anstett',
   }
@@ -759,6 +805,10 @@ function setLang(lang) {
   document.getElementById('tag-fpv').textContent   = t.tagFpv;
   document.getElementById('desc-fpv').textContent  = t.descFpv;
   document.getElementById('wip-fpv').textContent   = t.wipFpv;
+  document.getElementById('tag-gh23').textContent    = t.tagGh23;
+  document.getElementById('desc-gh23').textContent   = t.descGh23;
+  document.getElementById('tag-pierres').textContent  = t.tagPierres;
+  document.getElementById('desc-pierres').textContent = t.descPierres;
 
   // footer
   document.getElementById('footer-cta').innerHTML  = t.footerCta;
@@ -824,7 +874,9 @@ const PREVIEW_CONTENT = {
   cibo: { label: 'CiboAI',        sub: 'iOS · 2025',          cls: 'preview-cibo' },
   qr:   { label: 'QR Avocat',     sub: 'Web · Live',           cls: 'preview-qr'   },
   auto: { label: 'AutoReckon',    sub: 'CV · 2024',            cls: 'preview-auto' },
-  fpv:  { label: 'FPV Long Range',sub: 'Hardware',             cls: 'preview-fpv'  },
+  fpv:     { label: 'FPV Long Range',  sub: 'Hardware',    cls: 'preview-fpv'     },
+  gh23:    { label: 'GH23 Evolution',  sub: 'Web · Live', cls: 'preview-gh23'    },
+  pierres: { label: 'Pierres fines',   sub: 'Web · Live', cls: 'preview-pierres' },
 };
 
 let previewX = 0, previewY = 0, targetPX = 0, targetPY = 0;
@@ -912,7 +964,7 @@ const LINES = [
   { text: '$ init modules...', pause: 120 },
   { text: '  [✓] network.interface       online' },
   { text: '  [✓] render.engine           loaded' },
-  { text: '  [✓] portfolio.db            4 projects mounted' },
+  { text: '  [✓] portfolio.db            6 projects mounted' },
   { text: '  [✓] contact.api             :443' },
   { text: '' },
   { text: '$ whoami', pause: 80 },
