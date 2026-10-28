@@ -195,7 +195,7 @@ nav.visible { opacity: 1; }
   font-size: clamp(.78rem, 1.05vw, 1rem);
   line-height: 1.78; color: var(--white);
   max-width: 340px; font-weight: 400;
-  text-align: justify; text-justify: inter-word;
+  text-align: right;
 }
 .hero-line { display: block; overflow: hidden; line-height: 1.78; }
 .hero-line-inner {
@@ -496,20 +496,6 @@ nav.visible { opacity: 1; }
     <p class="works-header" id="works-header-label">Selected work</p>
     <div class="works-list">
 
-      <a class="project-row" data-preview="cibo" href="https://apps.apple.com/it/app/ciboai/id6757018806" target="_blank">
-        <div class="row-main">
-          <div class="row-head">
-            <span class="row-title">CiboAI</span>
-            <span class="row-tag" id="tag-cibo">iOS App · 2025</span>
-          </div>
-          <p class="row-desc" id="desc-cibo">AI-powered recipe finder. Built solo and shipped to the App Store in ~10 days.</p>
-        </div>
-        <div class="row-right">
-          <div class="row-stack"><span class="chip">Expo</span><span class="chip">SwiftUI</span><span class="chip">GPT-4o</span><span class="chip">App Store</span></div>
-          <span class="row-arrow">↗</span>
-        </div>
-      </a>
-
       <a class="project-row" data-preview="qr" href="https://www.quentinrapaud-avocat.com/" target="_blank">
         <div class="row-main">
           <div class="row-head">
@@ -521,34 +507,6 @@ nav.visible { opacity: 1; }
         <div class="row-right">
           <div class="row-stack"><span class="chip">HTML</span><span class="chip">Tailwind</span><span class="chip">JS</span><span class="chip">OVH</span></div>
           <span class="row-arrow">↗</span>
-        </div>
-      </a>
-
-      <a class="project-row no-link" data-preview="auto" href="#">
-        <div class="row-main">
-          <div class="row-head">
-            <span class="row-title">AutoReckon</span>
-            <span class="row-tag" id="tag-auto">Computer Vision · 2024</span>
-          </div>
-          <p class="row-desc" id="desc-auto">3-stage CV pipeline — vehicle detection, license plate OCR & model classification. 2.2ms inference.</p>
-        </div>
-        <div class="row-right">
-          <div class="row-stack"><span class="chip">PyTorch</span><span class="chip">YOLOv5</span><span class="chip">ResNet50</span><span class="chip">VGG16</span></div>
-          <span class="row-wip" id="wip-auto">In progress</span>
-        </div>
-      </a>
-
-      <a class="project-row no-link" data-preview="fpv" href="#">
-        <div class="row-main">
-          <div class="row-head">
-            <span class="row-title">FPV Long Range</span>
-            <span class="row-tag" id="tag-fpv">Hardware · Fabrication</span>
-          </div>
-          <p class="row-desc" id="desc-fpv">Full drone build from scratch — CAD frame, 3D-printed parts, electronics wiring & Betaflight tuning.</p>
-        </div>
-        <div class="row-right">
-          <div class="row-stack"><span class="chip">3D Print</span><span class="chip">Betaflight</span><span class="chip">ExpressLRS</span><span class="chip">CAD</span></div>
-          <span class="row-wip" id="wip-fpv">Build log</span>
         </div>
       </a>
 
@@ -580,6 +538,48 @@ nav.visible { opacity: 1; }
         </div>
       </a>
 
+      <a class="project-row no-link" data-preview="auto" href="#">
+        <div class="row-main">
+          <div class="row-head">
+            <span class="row-title">AutoReckon</span>
+            <span class="row-tag" id="tag-auto">Computer Vision · 2024</span>
+          </div>
+          <p class="row-desc" id="desc-auto">3-stage CV pipeline — vehicle detection, license plate OCR & model classification. 2.2ms inference.</p>
+        </div>
+        <div class="row-right">
+          <div class="row-stack"><span class="chip">PyTorch</span><span class="chip">YOLOv5</span><span class="chip">ResNet50</span><span class="chip">VGG16</span></div>
+          <span class="row-wip" id="wip-auto">In progress</span>
+        </div>
+      </a>
+
+      <a class="project-row" data-preview="cibo" href="https://apps.apple.com/it/app/ciboai/id6757018806" target="_blank">
+        <div class="row-main">
+          <div class="row-head">
+            <span class="row-title">CiboAI</span>
+            <span class="row-tag" id="tag-cibo">iOS App · 2025</span>
+          </div>
+          <p class="row-desc" id="desc-cibo">AI-powered recipe finder. Built solo and shipped to the App Store in ~10 days.</p>
+        </div>
+        <div class="row-right">
+          <div class="row-stack"><span class="chip">Expo</span><span class="chip">SwiftUI</span><span class="chip">GPT-4o</span><span class="chip">App Store</span></div>
+          <span class="row-arrow">↗</span>
+        </div>
+      </a>
+
+      <a class="project-row no-link" data-preview="fpv" href="#">
+        <div class="row-main">
+          <div class="row-head">
+            <span class="row-title">FPV Long Range</span>
+            <span class="row-tag" id="tag-fpv">Hardware · Fabrication</span>
+          </div>
+          <p class="row-desc" id="desc-fpv">Full drone build from scratch — CAD frame, 3D-printed parts, electronics wiring & Betaflight tuning.</p>
+        </div>
+        <div class="row-right">
+          <div class="row-stack"><span class="chip">3D Print</span><span class="chip">Betaflight</span><span class="chip">ExpressLRS</span><span class="chip">CAD</span></div>
+          <span class="row-wip" id="wip-fpv">Build log</span>
+        </div>
+      </a>
+
     </div>
   </section>
 
@@ -604,19 +604,19 @@ const TRANSLATIONS = {
     navContact: 'Contact',
     scrollHint: 'Scroll',
     h0: 'Hey there,',
-    h2: 'I am a freelance engineer & developer',
-    h2em: true, // contient un <em>
+    h2: 'I boost your online visibility',
+    h2em: true,
     h3loc: 'FRANCE & LUXEMBOURG',
     h3pre: 'based between ',
     h3post: '.',
     h4pre: 'I ',
-    h4collab: 'COLLABORATE WITH AGENCIES,',
-    h5founders: 'STARTUPS & FOUNDERS',
-    h5post: ' to build',
-    h6: 'modern and reliable products, with',
-    h7pre: 'a special attention to ',
-    h7tech: 'AI, WEB & MOBILE',
-    h8: '— and to things that actually work.',
+    h4collab: 'BUILD WEBSITES',
+    h5founders: '& DRIVE CLIENT ACQUISITION',
+    h5post: ' through',
+    h6: 'social media, so you can focus',
+    h7pre: 'on what you do best.',
+    h7tech: 'WEB · SOCIAL · SEO',
+    h8: 'Results you can actually measure.',
     h8em: true,
     worksHeader: 'Selected work',
     profLabel1: 'Engineering background',
@@ -647,19 +647,19 @@ const TRANSLATIONS = {
     navContact: 'Contact',
     scrollHint: 'Défiler',
     h0: 'Bonjour,',
-    h2: 'Je suis ingénieur & développeur freelance',
+    h2: "J'optimise votre visibilité en ligne",
     h2em: true,
     h3loc: 'FRANCE & LUXEMBOURG',
     h3pre: 'basé entre la ',
     h3post: '.',
     h4pre: 'Je ',
-    h4collab: 'COLLABORE AVEC DES AGENCES,',
-    h5founders: 'STARTUPS & FONDATEURS',
-    h5post: ' pour créer',
-    h6: 'des produits modernes et fiables, avec',
-    h7pre: 'une attention particulière à ',
-    h7tech: "L'IA, WEB & MOBILE",
-    h8: '— et aux choses qui fonctionnent vraiment.',
+    h4collab: 'CRÉE DES SITES WEB',
+    h5founders: '& GÉNÈRE DES CLIENTS',
+    h5post: ' via les',
+    h6: 'réseaux sociaux, pour que vous puissiez',
+    h7pre: 'vous concentrer sur votre cœur de métier.',
+    h7tech: 'WEB · SOCIAL · SEO',
+    h8: 'Des résultats concrets et mesurables.',
     h8em: true,
     worksHeader: 'Projets sélectionnés',
     profLabel1: 'Profil ingénieur',
@@ -690,19 +690,19 @@ const TRANSLATIONS = {
     navContact: 'お問い合わせ',
     scrollHint: 'スクロール',
     h0: 'はじめまして。',
-    h2: 'フリーランスのエンジニア＆開発者',
+    h2: 'オンラインの認知度を高めます',
     h2em: true,
     h3loc: 'フランス・ルクセンブルク',
     h3pre: '拠点：',
     h3post: '。',
     h4pre: '',
-    h4collab: 'エージェンシー、',
-    h5founders: 'スタートアップ、創業者',
-    h5post: 'と協力し、',
-    h6: '信頼性の高い現代的なプロダクトを',
-    h7pre: '構築。専門領域は',
-    h7tech: 'AI・Web・モバイル',
-    h8: '— 実際に動くものにこだわります。',
+    h4collab: 'サイト制作',
+    h5founders: '& SNSで集客',
+    h5post: 'あなたは',
+    h6: '本業に集中できます。',
+    h7pre: '専門領域：',
+    h7tech: 'Web・SNS・SEO',
+    h8: '数字で見える成果を。',
     h8em: true,
     worksHeader: '制作実績',
     profLabel1: 'エンジニアリング',
@@ -738,11 +738,11 @@ function buildHeroHTML(t) {
 
   let line2;
   if (currentLang === 'ja') {
-    line2 = `<em${emClass}>${t.h2}</em>です。`;
+    line2 = `<em${emClass}>${t.h2}</em>`;
   } else if (currentLang === 'fr') {
-    line2 = `Je suis <em${emClass}>ingénieur & développeur freelance</em>`;
+    line2 = `<em${emClass}>J'optimise votre visibilité en ligne</em>`;
   } else {
-    line2 = `I am a <em${emClass}>freelance engineer & developer</em>`;
+    line2 = `<em${emClass}>I boost your online visibility</em>`;
   }
 
   const lines = [
@@ -755,10 +755,10 @@ function buildHeroHTML(t) {
     t.h6,
     `${t.h7pre}<strong class="s-tech" data-text="${t.h7tech}">${t.h7tech}</strong>`,
     currentLang === 'ja'
-      ? `— <em${emClass}>本当に動くもの</em>を大切に。`
+      ? `<em${emClass}>数字で見える成果</em>を。`
       : currentLang === 'fr'
-        ? `— et aux choses qui fonctionnent <em${emClass}>vraiment</em>.`
-        : `— and to things that actually <em${emClass}>work</em>.`,
+        ? `Des résultats <em${emClass}>concrets</em> et mesurables.`
+        : `Results you can actually <em${emClass}>measure</em>.`,
   ];
   return lines;
 }
